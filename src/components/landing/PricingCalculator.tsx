@@ -5,22 +5,23 @@ import Link from 'next/link';
 const tiers = [
   {
     name: 'Pilot',
-    price: '€2,000',
+    price: '€5,000',
     period: '/ month',
-    billing: '(billed annually)',
-    description: 'For teams validating a unified data layer in one domain',
+    billing: '6-month commitment · self-hosted',
+    description: 'Prove the value of a unified data layer in your environment. Scoped to get you live fast — and leave you wanting more.',
     cta: 'Start a Pilot',
     ctaLink: '/contact',
     highlight: false,
     features: [
-      'Up to 5 Data Products',
-      'Unlimited Data Sources',
+      'Up to 20 Data Sources',
+      'Unlimited Data Products',
+      'Full dependency graph & blast radius',
       'Standard field mapping & transformation',
-      'Dependency graph (read-only)',
-      'Advisory governance (warn-only)',
-      'Basic audit history',
-      'Hosted deployment',
-      'Email support',
+      'Governance (warn mode)',
+      'Audit history',
+      'Self-hosted — your infrastructure',
+      'Onboarding support',
+      '90-day value review included',
     ],
   },
   {
@@ -28,18 +29,18 @@ const tiers = [
     price: '€18,000',
     period: '/ month',
     billing: '(billed annually)',
-    description: 'For organisations running Integrius as a core data platform',
+    description: 'For organisations running Integrius as a core data platform across multiple domains',
     cta: 'Talk to Sales',
     ctaLink: '/contact',
     highlight: true,
     features: [
-      'Up to 50 Data Products',
       'Unlimited Data Sources',
+      'Unlimited Data Products',
       'Full dependency graph & blast radius',
       'Governance modes (warn + enforce)',
       'Override reasoning & audit trail',
       'Org scopes (domains, environments, teams)',
-      'SSO',
+      'SSO / SCIM',
       'Self-hosted',
       'Standard SLA',
     ],
@@ -49,7 +50,7 @@ const tiers = [
     price: 'From €320,000',
     period: '/ year',
     billing: '(custom contract)',
-    description: 'For organizations where data changes can halt operations, trigger compliance incidents, or impact revenue',
+    description: 'For organisations where data changes can halt operations, trigger compliance incidents, or impact revenue',
     cta: 'Contact Us',
     ctaLink: '/contact',
     highlight: false,
@@ -70,12 +71,12 @@ export default function PricingCalculator() {
       <div className="text-center mb-12 p-6 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20">
         <div className="flex items-center justify-center gap-2 mb-3">
           <Box className="w-6 h-6 text-cyan-400" />
-          <span className="text-lg font-semibold text-white">Priced by Data Products</span>
+          <span className="text-lg font-semibold text-white">Start with a Pilot. Expand When You&apos;re Ready.</span>
         </div>
         <p className="text-lg text-white">
-          <strong>Integrius is priced on the number of governed data products you run in production — not data sources, pipelines, or complexity.</strong>
+          <strong>The pilot is deliberately scoped — 20 data sources, self-hosted, 6 months. Enough to prove the value. Not enough to satisfy it.</strong>
         </p>
-        <p className="mt-2 text-white/70">Data sources, mappings, and internal complexity are unlimited.</p>
+        <p className="mt-2 text-white/70">Enterprise and Platform are unlimited. When you hit the ceiling, the upgrade conversation starts itself.</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -127,7 +128,7 @@ export default function PricingCalculator() {
 
       <div className="text-center p-6 rounded-xl mb-16 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 border border-white/10">
         <p className="text-base font-medium text-white/90">
-          Most customers start with a small number of data products and expand as additional systems and domains are brought under governance.
+          Every customer starts with a pilot. Most hit the 20-source ceiling before month 4 and expand. That&apos;s the point.
         </p>
       </div>
 
