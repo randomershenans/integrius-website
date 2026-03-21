@@ -8,7 +8,7 @@ const tiers = [
     price: '€5,000',
     period: '/ month',
     billing: '6-month commitment · self-hosted',
-    description: 'Prove the value of a unified data layer in your environment. Scoped to get you live fast — and leave you wanting more.',
+    description: 'Prove the value of a unified data layer in your environment. Scoped to get you live fast, and leave you wanting more.',
     cta: 'Start a Pilot',
     ctaLink: '/contact',
     highlight: false,
@@ -19,7 +19,7 @@ const tiers = [
       'Standard field mapping & transformation',
       'Governance (warn mode)',
       'Audit history',
-      'Self-hosted — your infrastructure',
+      'Self-hosted on your infrastructure',
       'Onboarding support',
       '90-day value review included',
     ],
@@ -74,7 +74,7 @@ export default function PricingCalculator() {
           <span className="text-lg font-semibold text-white">Start with a Pilot. Expand When You&apos;re Ready.</span>
         </div>
         <p className="text-lg text-white">
-          <strong>The pilot is deliberately scoped — 20 data sources, self-hosted, 6 months. Enough to prove the value. Not enough to satisfy it.</strong>
+          <strong>The pilot is deliberately scoped: 20 data sources, self-hosted, 6 months. Enough to prove the value. Not enough to satisfy it.</strong>
         </p>
         <p className="mt-2 text-white/70">Enterprise and Platform are unlimited. When you hit the ceiling, the upgrade conversation starts itself.</p>
       </div>
