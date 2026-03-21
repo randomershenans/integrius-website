@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #3b5bdb;
+  --brand-dark: #2d45b0;
+  --font-inter: var(--font-inter, 'Inter', ui-sans-serif, system-ui, sans-serif);
+}
+
+body {
+  font-family: var(--font-inter);
+  @apply text-gray-900 antialiased;
+}
+
+/* Article prose styles */
+.prose h1 { @apply text-3xl font-bold mb-6 mt-0 text-gray-900; }
+.prose h2 { @apply text-2xl font-semibold mb-4 mt-10 text-gray-900; }
+.prose h3 { @apply text-xl font-semibold mb-3 mt-8 text-gray-800; }
+.prose p  { @apply mb-5 leading-relaxed text-gray-700; }
+.prose ul { @apply mb-5 pl-5 list-disc space-y-1 text-gray-700; }
+.prose ol { @apply mb-5 pl-5 list-decimal space-y-1 text-gray-700; }
+.prose li { @apply leading-relaxed; }
+.prose strong { @apply font-semibold text-gray-900; }
+.prose a  { @apply text-brand-500 underline hover:text-brand-700; }
+.prose code { @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono; }
+.prose pre  { @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-6; }
+.prose pre code { @apply bg-transparent p-0 text-gray-100; }
+.prose blockquote { @apply border-l-4 border-brand-500 pl-4 italic text-gray-600 mb-5; }
+.prose hr { @apply border-gray-200 my-10; }

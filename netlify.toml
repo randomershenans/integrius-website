@@ -1,0 +1,9 @@
+[build]
+  command = "npx prisma generate && npm run build"
+  publish = ".next"
+
+[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = "prisma/seed.ts"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

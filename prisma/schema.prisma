@@ -1,0 +1,124 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// INTEGRIUS CMS — Prisma Schema
+//
+// THIS IS THE MARKETING BLOG CMS. NOT THE INTEGRIUS PRODUCT.
+// All tables are prefixed with cms_ to avoid any collision with product tables.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin users for the CMS — completely separate from product users
+model cms_admin_users {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique
+  password_hash String
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  last_login_at DateTime? @db.Timestamptz(6)
+
+  @@index([email])
+}
+
+// Keyword clusters — the 6 SEO clusters from the content bank
+model cms_keyword_clusters {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @unique   // e.g. "Data Integration Problems"
+  slug        String   @unique   // e.g. "data-integration"
+  description String?
+  sort_order  Int      @default(0)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  specs       cms_article_specs[]
+  articles    cms_articles[]
+}
+
+// Article specifications from the content bank — the blueprint for AI generation
+model cms_article_specs {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cluster_id         String   @db.Uuid
+  article_type       String   @default("pillar")  // "pillar" | "faq"
+  title              String
+  slug               String   @unique
+  primary_keyword    String
+  secondary_keywords String[] @default([])
+  search_intent      String   // "informational" | "commercial"
+  meta_title         String
+  meta_description   String
+  h2_structure       String[] @default([])         // ordered list of H2s
+  key_points         String[] @default([])         // bullets the article must cover
+  word_count_min     Int      @default(1200)
+  word_count_max     Int      @default(2000)
+  cta_text           String?
+  internal_links     String[] @default([])         // slug references
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+
+  cluster  cms_keyword_clusters @relation(fields: [cluster_id], references: [id])
+  articles cms_articles[]
+
+  @@index([cluster_id])
+  @@index([article_type])
+}
+
+// Published / draft articles
+model cms_articles {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spec_id          String?   @db.Uuid     // null if manually created (not AI-generated)
+  cluster_id       String?   @db.Uuid
+
+  title            String
+  slug             String    @unique
+  meta_title       String
+  meta_description String
+  content          String    @db.Text      // Markdown
+  excerpt          String?   @db.Text      // 1-2 sentence summary for listing page
+  primary_keyword  String?
+  article_type     String    @default("pillar")  // "pillar" | "faq"
+  word_count       Int?
+
+  status           String    @default("draft")    // "draft" | "scheduled" | "published"
+  published_at     DateTime? @db.Timestamptz(6)
+  scheduled_for    DateTime? @db.Timestamptz(6)
+
+  // LinkedIn sharing
+  linkedin_shared  Boolean   @default(false)
+  linkedin_shared_at DateTime? @db.Timestamptz(6)
+  linkedin_post_url String?
+
+  // AI generation metadata
+  ai_generated     Boolean   @default(false)
+  ai_model         String?   // e.g. "claude-3-5-sonnet-20241022"
+  ai_prompt_tokens Int?
+  ai_output_tokens Int?
+
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+
+  spec    cms_article_specs?   @relation(fields: [spec_id], references: [id], onDelete: SetNull)
+  cluster cms_keyword_clusters? @relation(fields: [cluster_id], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([published_at])
+  @@index([cluster_id])
+  @@index([slug])
+}
+
+// Generation queue — articles scheduled for AI generation
+model cms_generation_queue {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  spec_id     String   @db.Uuid
+  status      String   @default("pending")  // "pending" | "generating" | "done" | "failed"
+  scheduled_for DateTime @db.Timestamptz(6)
+  started_at  DateTime? @db.Timestamptz(6)
+  completed_at DateTime? @db.Timestamptz(6)
+  error       String?
+  article_id  String?  @db.Uuid             // set once generation succeeds
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([status, scheduled_for])
+}
