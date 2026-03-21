@@ -58,7 +58,7 @@ export default function Home() {
                   href="https://app.integri.us"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-6 py-3 rounded-lg font-semibold transition-all"
                 >
-                  Start Free Trial
+                  Get Started
                   <ArrowRight className="h-4 w-4" />
                 </a>
                 <Link
