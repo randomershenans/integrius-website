@@ -39,7 +39,7 @@ export function BurgerMenu() {
           <p style={{ color: 'rgba(0,184,212,0.6)', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '24px' }}>Products</p>
           <Link href="/products/core" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '16px', textDecoration: 'none' }}>Integrius Core</Link>
           <Link href="/products/sdk" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '16px', textDecoration: 'none' }}>Integrius SDK</Link>
-          <Link href="/products/data-consumer" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '16px', textDecoration: 'none' }}>Data Consumer</Link>
+          <Link href="/products/optic" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '16px', textDecoration: 'none' }}>Integrius Optic</Link>
           <Link href="/products/search" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '32px', textDecoration: 'none' }}>Unified Search API</Link>
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px' }}>
             <a href="#how-it-works" onClick={() => scrollTo('#how-it-works')} style={{ display: 'block', color: 'white', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>How It Works</a>

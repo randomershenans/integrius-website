@@ -6,7 +6,7 @@ import { ChevronDown } from 'lucide-react';
 const products = [
   { href: '/products/core', title: 'Integrius Core', sub: 'Unified Enterprise Data Layer' },
   { href: '/products/sdk', title: 'Integrius SDK', sub: 'Build Faster With Unified Data' },
-  { href: '/products/data-consumer', title: 'Data Consumer', sub: 'Instant Dashboards & BI' },
+  { href: '/products/optic', title: 'Integrius Optic', sub: 'See Everything. Ask Anything.' },
   { href: '/products/search', title: 'Unified Search API', sub: 'Schema-Aware Search Endpoints' },
 ];
 

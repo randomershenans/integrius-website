@@ -145,10 +145,10 @@ export default function PricingCalculator() {
           </div>
           <div className="p-6 rounded-xl opacity-60 bg-white/[0.02] border border-white/5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-bold text-white/70">Integrius Data Consumer</h4>
+              <h4 className="text-lg font-bold text-white/70">Integrius Optic</h4>
               <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-white/50">Coming Soon</span>
             </div>
-            <p className="text-sm text-white/50">For analytics teams and BI tools. Feed unified datasets directly into your reporting stack.</p>
+            <p className="text-sm text-white/50">Ask anything. Monitor everything. Generate reports, set alerts, explore your data in plain English.</p>
           </div>
           <div className="p-6 rounded-xl bg-gradient-to-b from-cyan-500/10 to-purple-500/5 border border-cyan-500/30">
             <div className="flex items-center justify-between mb-4">

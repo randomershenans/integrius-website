@@ -184,7 +184,7 @@ export default function Home() {
                 {[
                   { icon: Database, title: 'Integrius Core', subtitle: 'Unified Enterprise Data Layer', description: 'Connect all your legacy systems, databases, and SaaS tools into one unified real-time API without data lakes, rewrites, or migrations.', link: '/products/core' },
                   { icon: Zap, title: 'Integrius SDK', subtitle: 'Build Faster With Unified Data', description: 'For developers and product teams. Pull from multiple systems, output one clean structure. Build internal tools in days instead of months.', link: '/products/sdk', badge: 'Live on npm' },
-                  { icon: LineChart, title: 'Integrius Data Consumer', subtitle: 'Instant Dashboards & BI', description: 'All your data sources unified into live datasets. Drag-and-drop into any BI tool. What takes weeks now takes seconds.', link: '/products/data-consumer' },
+                  { icon: LineChart, title: 'Integrius Optic', subtitle: 'See Everything. Ask Anything.', description: 'The conversational data interface for your enterprise. Ask questions, explore answers, generate reports, and monitor what matters. All from one interface.', link: '/products/optic' },
                 ].map((product, index) => (
                   <motion.div
                     key={product.title}
