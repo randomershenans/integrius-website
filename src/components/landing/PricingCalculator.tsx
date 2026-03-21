@@ -135,12 +135,12 @@ export default function PricingCalculator() {
         <h3 className="text-2xl font-bold text-center mb-2 text-white">Decision-Layer Capabilities</h3>
         <p className="text-center mb-8 text-white/60">Built on top of unified data</p>
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-xl opacity-60 bg-white/[0.02] border border-white/5">
+          <div className="p-6 rounded-xl bg-white/[0.04] border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-bold text-white/70">Integrius SDK</h4>
-              <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-white/50">Coming Soon</span>
+              <h4 className="text-lg font-bold text-white">Integrius SDK</h4>
+              <span className="px-2 py-1 rounded-full text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400">Live on npm</span>
             </div>
-            <p className="text-sm text-white/50">For developers building products on your unified data layer. Auto-mapping, schema management, and API generation.</p>
+            <p className="text-sm text-white/60">For developers building products on your unified data layer. Auto-mapping, schema management, and API generation.</p>
           </div>
           <div className="p-6 rounded-xl opacity-60 bg-white/[0.02] border border-white/5">
             <div className="flex items-center justify-between mb-4">

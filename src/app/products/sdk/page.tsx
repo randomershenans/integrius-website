@@ -59,16 +59,22 @@ export default function IntegriusSDKPage() {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center space-y-8 text-center max-w-4xl mx-auto">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Now live on npm
+                </div>
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white">Integrius SDK</h1>
                 <p className="text-2xl font-semibold text-[#00B8D4]">Build Faster With Unified Data</p>
                 <p className="mx-auto max-w-[700px] text-white/80 text-lg md:text-xl">
                   For developers and product teams. Pull from multiple systems, output one clean structure. Build internal tools, customer features, or automation in days instead of months.
                 </p>
               </motion.div>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                <Link href="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-6 py-3 rounded-lg font-semibold transition-all">
-                  Get Started <ArrowRight className="h-4 w-4" />
-                </Link>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex items-center gap-4">
+                <a href="https://www.npmjs.com/package/@integrius/sdk" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-6 py-3 rounded-lg font-semibold transition-all">
+                  Install SDK <ArrowRight className="h-4 w-4" />
+                </a>
+                <a href="https://github.com/randomershenans/integrius-sdk" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border border-white/20 text-white/70 px-5 py-3 rounded-lg font-semibold hover:border-white/40 hover:text-white transition-all">
+                  View on GitHub
+                </a>
               </motion.div>
             </div>
           </div>
@@ -135,10 +141,13 @@ export default function IntegriusSDKPage() {
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="flex flex-col items-center justify-center space-y-4 bg-black/50 backdrop-blur-lg p-8 rounded-xl" delay={0.5}>
               <h3 className="text-2xl font-bold text-center text-white">Ready to Ship Features, Not Integrations?</h3>
-              <p className="text-lg text-white/80 text-center max-w-2xl">Get early access to the SDK and start building with unified data today.</p>
-              <div className="mt-8">
-                <Link href="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-8 py-3 rounded-lg font-semibold text-lg transition-all">
-                  Request SDK Access <ArrowRight className="h-5 w-5" />
+              <p className="text-lg text-white/80 text-center max-w-2xl">The SDK is live. Install it now and start building with unified data in minutes.</p>
+              <div className="mt-8 flex items-center gap-4">
+                <a href="https://www.npmjs.com/package/@integrius/sdk" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-8 py-3 rounded-lg font-semibold text-lg transition-all">
+                  npm install @integrius/sdk <ArrowRight className="h-5 w-5" />
+                </a>
+                <Link href="/contact" className="inline-flex items-center gap-2 border border-white/20 text-white/70 px-6 py-3 rounded-lg font-semibold text-lg hover:border-white/40 hover:text-white transition-all">
+                  Talk to us
                 </Link>
               </div>
             </FloatingElement>

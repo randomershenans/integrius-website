@@ -53,13 +53,19 @@ export default function Home() {
                   Integrius unifies your data into governed data products and shows you exactly what will break, before you break it.
                 </p>
               </motion.div>
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="space-x-4">
-                <Link
-                  href="/contact"
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="https://app.integri.us"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-6 py-3 rounded-lg font-semibold transition-all"
                 >
-                  Get Started
+                  Start Free Trial
                   <ArrowRight className="h-4 w-4" />
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 border border-white/20 text-white/70 px-6 py-3 rounded-lg font-semibold hover:border-white/40 hover:text-white transition-all"
+                >
+                  Schedule a Demo
                 </Link>
               </motion.div>
             </div>
@@ -169,7 +175,7 @@ export default function Home() {
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
               <h2 className="text-3xl font-bold tracking-tighter text-center mb-4 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
-                Three Products. One Unified Data Layer.
+                One Unified Data Layer. Everything You Need.
               </h2>
               <p className="text-lg text-center mb-12 max-w-3xl mx-auto text-white/80">
                 The foundation enterprises have needed for 20 years. Built for how companies actually work.
@@ -177,7 +183,7 @@ export default function Home() {
               <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
                 {[
                   { icon: Database, title: 'Integrius Core', subtitle: 'Unified Enterprise Data Layer', description: 'Connect all your legacy systems, databases, and SaaS tools into one unified real-time API without data lakes, rewrites, or migrations.', link: '/products/core' },
-                  { icon: Zap, title: 'Integrius SDK', subtitle: 'Build Faster With Unified Data', description: 'For developers and product teams. Pull from multiple systems, output one clean structure. Build internal tools in days instead of months.', link: '/products/sdk' },
+                  { icon: Zap, title: 'Integrius SDK', subtitle: 'Build Faster With Unified Data', description: 'For developers and product teams. Pull from multiple systems, output one clean structure. Build internal tools in days instead of months.', link: '/products/sdk', badge: 'Live on npm' },
                   { icon: LineChart, title: 'Integrius Data Consumer', subtitle: 'Instant Dashboards & BI', description: 'All your data sources unified into live datasets. Drag-and-drop into any BI tool. What takes weeks now takes seconds.', link: '/products/data-consumer' },
                 ].map((product, index) => (
                   <motion.div
@@ -190,7 +196,12 @@ export default function Home() {
                     className="relative p-8 rounded-xl overflow-hidden bg-black/30 transition-all duration-300 flex flex-col"
                   >
                     <product.icon className="w-12 h-12 mb-4 text-[#00B8D4]" />
-                    <h3 className="text-2xl font-bold mb-2 text-white">{product.title}</h3>
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-2xl font-bold text-white">{product.title}</h3>
+                      {'badge' in product && product.badge && (
+                        <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 whitespace-nowrap">{product.badge}</span>
+                      )}
+                    </div>
                     <p className="text-lg font-semibold mb-4 text-[#00B8D4]">{product.subtitle}</p>
                     <p className="mb-6 flex-grow text-white/80">{product.description}</p>
                     <Link
