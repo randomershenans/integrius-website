@@ -35,7 +35,7 @@ const tiers = [
     highlight: true,
     features: [
       'Up to 50 Data Products',
-      'Unlimited Data Sources',
+      'Up to 100 Data Sources',
       'Full dependency graph & blast radius',
       'Governance modes (warn + enforce)',
       'Override reasoning & audit trail',
@@ -56,7 +56,7 @@ const tiers = [
     highlight: false,
     features: [
       '100+ Data Products',
-      'Unlimited Data Sources',
+      '200+ Data Sources',
       'Scales with your organisation',
       'Multi-domain, multi-region setups',
       'Search API included',
