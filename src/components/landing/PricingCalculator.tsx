@@ -13,8 +13,7 @@ const tiers = [
     ctaLink: '/contact',
     highlight: false,
     features: [
-      'Up to 20 Data Sources',
-      'Unlimited Data Products',
+      'Up to 5 Data Products',
       'Full dependency graph & blast radius',
       'Standard field mapping & transformation',
       'Governance (warn mode)',
@@ -34,8 +33,7 @@ const tiers = [
     ctaLink: '/contact',
     highlight: true,
     features: [
-      'Unlimited Data Sources',
-      'Unlimited Data Products',
+      'Up to 50 Data Products',
       'Full dependency graph & blast radius',
       'Governance modes (warn + enforce)',
       'Override reasoning & audit trail',
@@ -55,6 +53,7 @@ const tiers = [
     ctaLink: '/contact',
     highlight: false,
     features: [
+      'Unlimited Data Products',
       'Scales with your organisation',
       'Multi-domain, multi-region setups',
       'Search API included',
@@ -128,7 +127,7 @@ export default function PricingCalculator() {
 
       <div className="text-center p-6 rounded-xl mb-16 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 border border-white/10">
         <p className="text-base font-medium text-white/90">
-          Every customer starts with a pilot. Most hit the 20-source ceiling before month 4 and expand. That&apos;s the point.
+          Every customer starts with a pilot. Most hit the 5-product ceiling before month 4 and want more. That&apos;s the point.
         </p>
       </div>
 
