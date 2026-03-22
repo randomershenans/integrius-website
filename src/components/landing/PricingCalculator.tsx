@@ -14,6 +14,7 @@ const tiers = [
     highlight: false,
     features: [
       'Up to 5 Data Products',
+      'Up to 20 Data Sources',
       'Full dependency graph & blast radius',
       'Standard field mapping & transformation',
       'Governance (warn mode)',
@@ -34,6 +35,7 @@ const tiers = [
     highlight: true,
     features: [
       'Up to 50 Data Products',
+      'Unlimited Data Sources',
       'Full dependency graph & blast radius',
       'Governance modes (warn + enforce)',
       'Override reasoning & audit trail',
@@ -53,7 +55,8 @@ const tiers = [
     ctaLink: '/contact',
     highlight: false,
     features: [
-      'Unlimited Data Products',
+      '100+ Data Products',
+      'Unlimited Data Sources',
       'Scales with your organisation',
       'Multi-domain, multi-region setups',
       'Search API included',
