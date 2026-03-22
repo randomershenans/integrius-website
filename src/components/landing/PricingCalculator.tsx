@@ -143,12 +143,24 @@ export default function PricingCalculator() {
             </div>
             <p className="text-sm text-white/60">For developers building products on your unified data layer. Auto-mapping, schema management, and API generation.</p>
           </div>
-          <div className="p-6 rounded-xl opacity-60 bg-white/[0.02] border border-white/5">
+          <div className="p-6 rounded-xl bg-white/[0.04] border border-white/10">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-bold text-white/70">Integrius Optic</h4>
-              <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-white/50">Coming Soon</span>
+              <h4 className="text-lg font-bold text-white">Integrius Optic</h4>
+              <span className="px-2 py-1 rounded-full text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400">Available</span>
             </div>
-            <p className="text-sm text-white/50">Ask anything. Monitor everything. Generate reports, set alerts, explore your data in plain English.</p>
+            <p className="text-sm text-white/60 mb-4">Ask anything. Monitor everything. Generate reports, set alerts, explore your data in plain English.</p>
+            <div className="mb-4">
+              <p className="text-2xl font-bold text-cyan-400 mb-1">€100,000<span className="text-sm font-normal text-white/50">/year</span></p>
+              <p className="text-xs text-white/50">Add-on for Enterprise &amp; Platform Lite</p>
+              <p className="text-xs text-emerald-400 mt-1">✓ Included with Pilot &amp; Platform tier</p>
+            </div>
+            <Link
+              href="/products/optic"
+              className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 transition-all"
+            >
+              Learn More
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
           <div className="p-6 rounded-xl bg-gradient-to-b from-cyan-500/10 to-purple-500/5 border border-cyan-500/30">
             <div className="flex items-center justify-between mb-4">

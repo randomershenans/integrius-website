@@ -73,8 +73,8 @@ export default function IntegriusOpticPage() {
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center space-y-8 text-center max-w-4xl mx-auto">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/60 text-sm font-medium mb-2">
-                  Coming Soon
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-2">
+                  Now Available
                 </div>
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white">Integrius Optic</h1>
                 <p className="text-2xl font-semibold text-[#00B8D4]">See Everything. Ask Anything. Know What Matters.</p>
@@ -84,7 +84,7 @@ export default function IntegriusOpticPage() {
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
                 <Link href="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-6 py-3 rounded-lg font-semibold transition-all">
-                  Join the Waitlist <ArrowRight className="h-4 w-4" />
+                  Start a Pilot <ArrowRight className="h-4 w-4" />
                 </Link>
               </motion.div>
             </div>
@@ -210,11 +210,11 @@ export default function IntegriusOpticPage() {
         <section className="py-24 relative">
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="flex flex-col items-center justify-center space-y-4 bg-black/50 backdrop-blur-lg p-8 rounded-xl" delay={0.5}>
-              <h3 className="text-2xl font-bold text-center text-white">Be First When Optic Launches</h3>
-              <p className="text-lg text-white/80 text-center max-w-2xl">Join the waitlist and get early access for your pilot deployment.</p>
+              <h3 className="text-2xl font-bold text-center text-white">Deploy Optic in Your Pilot</h3>
+              <p className="text-lg text-white/80 text-center max-w-2xl">Optic is included in every pilot deployment. Ask, explore, and report on your unified data from day one.</p>
               <div className="mt-8">
                 <Link href="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white px-8 py-3 rounded-lg font-semibold text-lg transition-all">
-                  Join the Waitlist <ArrowRight className="h-5 w-5" />
+                  Start a Pilot <ArrowRight className="h-5 w-5" />
                 </Link>
               </div>
             </FloatingElement>
