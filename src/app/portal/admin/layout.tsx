@@ -48,9 +48,9 @@ export default function PortalAdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen bg-gray-950 flex">
       <aside className="w-56 bg-black border-r border-white/10 flex flex-col shrink-0">
         <div className="px-5 py-5 border-b border-white/10">
-          <span className="font-bold text-white">Integrius Portal</span>
-          <p className="text-xs text-white/40 mt-0.5">Admin</p>
-          {adminEmail && <p className="text-xs text-white/30 mt-0.5 truncate">{adminEmail}</p>}
+          <img src="/logo-dark.png" alt="Integrius" className="h-8 w-auto mb-1.5" />
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#00B8D4]/70">Portal</span>
+          <p className="text-xs text-white/30 mt-1 truncate">{adminEmail}</p>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
           {nav.map(n => {

@@ -30,8 +30,9 @@ export default function PortalLoginPage() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white">Integrius Portal</h1>
+        <div className="flex flex-col items-center mb-8 gap-2">
+          <img src="/logo-dark.png" alt="Integrius" className="h-12 w-auto" />
+          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#00B8D4]/80">Portal</span>
           <p className="text-sm text-white/40 mt-1">Sign in to your client portal</p>
         </div>
 
