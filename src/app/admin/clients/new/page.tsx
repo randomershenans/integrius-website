@@ -99,7 +99,7 @@ export default function NewClientPage() {
                 onChange={e => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                 required
                 placeholder="acme-corp"
-                pattern="^[a-z0-9-]+$"
+                pattern="^[a-z0-9\-]+$"
                 className={inputClass}
               />
               <p className="text-xs text-white/30 mt-1">Lowercase letters, numbers and hyphens only</p>
