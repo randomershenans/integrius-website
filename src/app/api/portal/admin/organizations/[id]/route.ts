@@ -32,7 +32,48 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   if (licError) return NextResponse.json({ error: licError.message }, { status: 500 })
   if (invError) return NextResponse.json({ error: invError.message }, { status: 500 })
 
-  return NextResponse.json({ ...org, licenses: licenses ?? [], invoices: invoices ?? [] })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapLicense = (l: any) => ({
+    id: l.id,
+    licenseKey: l.license_key,
+    product: l.product,
+    tier: l.tier,
+    status: l.status,
+    seats: l.seats,
+    monthlyValue: l.monthly_value,
+    maxDataSources: l.max_data_sources,
+    maxApiCalls: l.max_api_calls,
+    startsAt: l.starts_at,
+    expiresAt: l.expires_at,
+    revokedAt: l.revoked_at,
+    revokedReason: l.revoked_reason,
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInvoice = (i: any) => ({
+    id: i.id,
+    amount: i.amount,
+    currency: i.currency,
+    status: i.status,
+    period: i.period,
+    dueAt: i.due_at,
+    paidAt: i.paid_at,
+  })
+
+  return NextResponse.json({
+    id: org.id,
+    name: org.name,
+    slug: org.slug,
+    email: org.email,
+    phone: org.phone,
+    website: org.website,
+    status: org.status,
+    healthScore: org.health_score,
+    notes: org.notes,
+    createdAt: org.created_at,
+    licenses: (licenses ?? []).map(mapLicense),
+    invoices: (invoices ?? []).map(mapInvoice),
+  })
 }
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
