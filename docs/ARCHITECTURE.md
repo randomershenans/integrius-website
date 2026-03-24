@@ -1184,7 +1184,7 @@ seedPortalAdmin()
 
 Run with:
 ```bash
-PORTAL_ADMIN_EMAIL=ross@integri.us PORTAL_ADMIN_PASSWORD=strong-password tsx --env-file .env prisma/seed-portal.ts
+PORTAL_ADMIN_EMAIL=admin@example.com PORTAL_ADMIN_PASSWORD=strong-password tsx --env-file .env prisma/seed-portal.ts
 ```
 
 **Step 5 — Deploy migration to production**
@@ -1245,7 +1245,7 @@ PORTAL_LICENSE_JWT_SECRET="generate-yet-another-separate-random-32-char-string"
 
 # Seed credentials for the first portal admin (used by prisma/seed-portal.ts only)
 # Remove from production .env after first run.
-PORTAL_ADMIN_EMAIL="ross@integri.us"
+PORTAL_ADMIN_EMAIL="admin@example.com"
 PORTAL_ADMIN_PASSWORD="change-this-before-seeding"
 
 # Portal base URL — used for building invite/reset links in emails
