@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Building2, LogOut } from 'lucide-react'
+import { LayoutDashboard, Building2, Key, LogOut } from 'lucide-react'
 
 export default function PortalAdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -42,6 +42,7 @@ export default function PortalAdminLayout({ children }: { children: React.ReactN
   const nav = [
     { href: '/portal/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/portal/admin/clients', label: 'Clients', icon: Building2 },
+    { href: '/portal/admin/licenses', label: 'Licenses', icon: Key },
   ]
 
   return (
