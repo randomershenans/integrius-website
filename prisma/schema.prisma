@@ -3,6 +3,7 @@
 //
 // THIS IS THE MARKETING BLOG CMS. NOT THE INTEGRIUS PRODUCT.
 // All tables are prefixed with cms_ to avoid any collision with product tables.
+// Portal tables live in Supabase — see supabase/migrations/ for their schema.
 // ─────────────────────────────────────────────────────────────────────────────
 
 generator client {
