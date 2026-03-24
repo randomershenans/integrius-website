@@ -49,8 +49,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { product, tier, seats, maxApiCalls, maxDataSources, expiresAt, monthlyValue, status } = body as Record<string, unknown>
 
-  const validProducts = ['CORE', 'OPTIC', 'SEARCH', 'SDK', 'PLATFORM']
-  const validTiers = ['STARTER', 'GROWTH', 'ENTERPRISE', 'PLATFORM']
+  const validProducts = ['CORE', 'OPTIC', 'SEARCH', 'SDK']
+  const validTiers = ['PILOT', 'ENTERPRISE', 'PLATFORM_LITE', 'PLATFORM']
 
   if (!product || !validProducts.includes(product as string)) {
     return NextResponse.json({ error: `product must be one of: ${validProducts.join(', ')}` }, { status: 400 })

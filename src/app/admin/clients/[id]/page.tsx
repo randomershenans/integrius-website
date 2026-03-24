@@ -327,7 +327,7 @@ export default function ClientDetailPage() {
                   onChange={e => setNewProduct(e.target.value)}
                   className={INPUT_CLASS}
                 >
-                  {['CORE', 'OPTIC', 'SEARCH', 'SDK', 'PLATFORM'].map(p => <option key={p}>{p}</option>)}
+                  {['CORE', 'OPTIC', 'SEARCH', 'SDK'].map(p => <option key={p}>{p}</option>)}
                 </select>
               </div>
               <div>
@@ -337,7 +337,7 @@ export default function ClientDetailPage() {
                   onChange={e => setNewTier(e.target.value)}
                   className={INPUT_CLASS}
                 >
-                  {['STARTER', 'GROWTH', 'ENTERPRISE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
+                  {['PILOT', 'ENTERPRISE', 'PLATFORM_LITE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
                 </select>
               </div>
               <div>
@@ -527,7 +527,7 @@ export default function ClientDetailPage() {
                         onChange={e => setEditForm(f => ({ ...f, tier: e.target.value }))}
                         className={INPUT_CLASS}
                       >
-                        {['STARTER', 'GROWTH', 'ENTERPRISE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
+                        {['PILOT', 'ENTERPRISE', 'PLATFORM_LITE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
                       </select>
                     </div>
                     <div>

@@ -22,14 +22,14 @@ interface License {
 }
 
 const PRODUCT_LABELS: Record<string, string> = {
-  CORE: 'Core', OPTIC: 'Optic', SEARCH: 'Search', SDK: 'SDK', PLATFORM: 'Platform',
+  CORE: 'Core', OPTIC: 'Optic', SEARCH: 'Search', SDK: 'SDK',
 }
 
 const TIER_STYLES: Record<string, string> = {
-  STARTER:    'bg-white/10 text-white/50 border-white/20',
-  GROWTH:     'bg-blue-500/15 text-blue-400 border-blue-500/30',
-  ENTERPRISE: 'bg-purple-500/15 text-purple-400 border-purple-500/30',
-  PLATFORM:   'bg-[#00B8D4]/15 text-[#00B8D4] border-[#00B8D4]/30',
+  PILOT:         'bg-white/10 text-white/50 border-white/20',
+  ENTERPRISE:    'bg-purple-500/15 text-purple-400 border-purple-500/30',
+  PLATFORM_LITE: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
+  PLATFORM:      'bg-[#00B8D4]/15 text-[#00B8D4] border-[#00B8D4]/30',
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -169,7 +169,7 @@ export default function AdminLicensesPage() {
                     <div className="col-span-2">
                       <p className="text-sm text-white/80">Integrius {PRODUCT_LABELS[l.product] ?? l.product}</p>
                       <span className={`text-xs font-medium px-1.5 py-0.5 rounded border ${TIER_STYLES[l.tier] ?? TIER_STYLES.STARTER}`}>
-                        {l.tier.charAt(0) + l.tier.slice(1).toLowerCase()}
+                        {l.tier === 'PLATFORM_LITE' ? 'Platform Lite' : l.tier.charAt(0) + l.tier.slice(1).toLowerCase()}
                       </span>
                     </div>
                     <div className="col-span-2">
