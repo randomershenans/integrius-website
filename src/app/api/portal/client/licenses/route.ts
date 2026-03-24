@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
   const { data: licenses, error: licError } = await supabaseAdmin
     .from('portal_licenses')
-    .select('id, license_key, product, tier, status, seats, max_api_calls, max_data_sources, starts_at, expires_at, monthly_value')
+    .select('id, license_key, product, tier, status, seats, max_api_calls, max_data_sources, starts_at, expires_at')
     .eq('org_id', orgId)
     .order('created_at', { ascending: false })
 
