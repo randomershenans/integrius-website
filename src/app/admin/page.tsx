@@ -104,6 +104,39 @@ export default async function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {/* Client Management */}
+      <div className="bg-black/40 rounded-xl border border-white/10">
+        <div className="px-6 py-4 border-b border-white/10">
+          <h2 className="font-semibold text-white">Client Management</h2>
+        </div>
+        <div className="grid grid-cols-2 divide-x divide-white/5">
+          <Link
+            href="/admin/clients"
+            className="px-6 py-5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="w-10 h-10 rounded-lg bg-[#00B8D4]/10 border border-[#00B8D4]/20 flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#00B8D4]"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+            </div>
+            <div>
+              <p className="font-medium text-white/90">Clients</p>
+              <p className="text-xs text-white/40 mt-0.5">View and manage all client organisations</p>
+            </div>
+          </Link>
+          <Link
+            href="/admin/licenses"
+            className="px-6 py-5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors"
+          >
+            <div className="w-10 h-10 rounded-lg bg-[#00B8D4]/10 border border-[#00B8D4]/20 flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#00B8D4]"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+            </div>
+            <div>
+              <p className="font-medium text-white/90">Licenses</p>
+              <p className="text-xs text-white/40 mt-0.5">View all active and expiring licenses</p>
+            </div>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
