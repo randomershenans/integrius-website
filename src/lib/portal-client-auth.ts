@@ -22,11 +22,17 @@ export async function getClientSession(
   if (error || !user) return NextResponse.json({ error: 'Invalid or expired session' }, { status: 401 })
 
   // Primary: look up portal_client_users by auth_uid
-  const { data: clientUser } = await supabaseAdmin
+  const { data: clientUser, error: lookupError } = await supabaseAdmin
     .from('portal_client_users')
     .select('org_id, role')
     .eq('auth_uid', user.id)
     .single()
+
+  if (lookupError && lookupError.code !== 'PGRST116') {
+    // PGRST116 = no rows found (expected), anything else is a real error
+    console.error('portal_client_users lookup error:', lookupError)
+    return NextResponse.json({ error: `DB error: ${lookupError.message}` }, { status: 500 })
+  }
 
   if (clientUser?.org_id) {
     return { userId: user.id, orgId: clientUser.org_id, role: clientUser.role }
