@@ -1,10 +1,12 @@
 import crypto from 'crypto'
 
 const PRODUCT_CODES: Record<string, string> = {
-  CORE: 'COR', OPTIC: 'OPT', SEARCH: 'SRC', SDK: 'SDK', PLATFORM: 'PLT'
+  CORE: 'COR', OPTIC: 'OPT', SEARCH: 'SRC', SDK: 'SDK',
 }
 const TIER_CODES: Record<string, string> = {
-  STARTER: 'STR', GROWTH: 'GRW', ENTERPRISE: 'ENT', PLATFORM: 'PLT'
+  PILOT: 'PIL', ENTERPRISE: 'ENT', PLATFORM_LITE: 'PLT', PLATFORM: 'PLA',
+  // legacy — kept for any existing keys
+  STARTER: 'STR', GROWTH: 'GRW',
 }
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // unambiguous characters only
 
