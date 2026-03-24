@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Key, FileText, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, Key, FileText, Plus, Trash2, Pencil, Copy, Check } from 'lucide-react'
 
 interface License {
   id: string
@@ -13,6 +13,8 @@ interface License {
   status: string
   seats: number
   monthlyValue: string
+  maxDataSources: number | null
+  maxApiCalls: number | null
   startsAt: string
   expiresAt: string | null
   revokedAt: string | null
@@ -44,6 +46,14 @@ interface Org {
   invoices: Invoice[]
 }
 
+interface EditForm {
+  tier: string
+  seats: string
+  maxDataSources: string
+  maxApiCalls: string
+  expiresAt: string
+}
+
 const STATUS_STYLES: Record<string, string> = {
   ACTIVE: 'bg-green-500/15 text-green-400 border-green-500/30',
   TRIAL: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
@@ -57,16 +67,17 @@ const STATUS_STYLES: Record<string, string> = {
   CANCELLED: 'bg-white/10 text-white/50 border-white/10',
 }
 
+const INPUT_CLASS = 'w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50'
+
 export default function ClientDetailPage() {
   const params = useParams()
   const router = useRouter()
   const id = params.id as string
   const [org, setOrg] = useState<Org | null>(null)
   const [loading, setLoading] = useState(true)
-  const [revoking, setRevoking] = useState<string | null>(null)
-  const [showNewLicense, setShowNewLicense] = useState(false)
 
-  // New license form state
+  // New license form
+  const [showNewLicense, setShowNewLicense] = useState(false)
   const [newProduct, setNewProduct] = useState('CORE')
   const [newTier, setNewTier] = useState('STARTER')
   const [newSeats, setNewSeats] = useState(1)
@@ -76,6 +87,21 @@ export default function ClientDetailPage() {
   const [newExpiresAt, setNewExpiresAt] = useState('')
   const [licenseError, setLicenseError] = useState('')
   const [licenseLoading, setLicenseLoading] = useState(false)
+
+  // Newly created key display
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null)
+  const [keyCopied, setKeyCopied] = useState(false)
+
+  // Inline revoke panel
+  const [pendingRevoke, setPendingRevoke] = useState<string | null>(null)
+  const [revokeReason, setRevokeReason] = useState('')
+  const [revoking, setRevoking] = useState<string | null>(null)
+
+  // Inline edit panel
+  const [pendingEdit, setPendingEdit] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState<EditForm>({ tier: 'STARTER', seats: '1', maxDataSources: '', maxApiCalls: '', expiresAt: '' })
+  const [editLoading, setEditLoading] = useState(false)
+  const [editError, setEditError] = useState('')
 
   async function load() {
     const r = await fetch(`/api/portal/admin/organizations/${id}`)
@@ -87,15 +113,17 @@ export default function ClientDetailPage() {
   useEffect(() => { load() }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleRevoke(licenseId: string) {
-    const reason = prompt('Reason for revocation (optional):')
-    if (reason === null) return // cancelled
     setRevoking(licenseId)
     const r = await fetch(`/api/portal/admin/organizations/${id}/licenses/${licenseId}/revoke`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ revokedReason: reason }),
+      body: JSON.stringify({ revokedReason: revokeReason }),
     })
-    if (r.ok) await load()
+    if (r.ok) {
+      setPendingRevoke(null)
+      setRevokeReason('')
+      await load()
+    }
     setRevoking(null)
   }
 
@@ -132,12 +160,60 @@ export default function ClientDetailPage() {
       setLicenseLoading(false)
       return
     }
+    const created = await r.json() as { license_key?: string; licenseKey?: string }
+    const key = created.license_key ?? created.licenseKey ?? null
     setShowNewLicense(false)
     setNewMonthlyValue('')
     setNewMaxApi('')
     setNewMaxDs('')
     setNewExpiresAt('')
     setLicenseLoading(false)
+    setNewlyCreatedKey(key)
+    setKeyCopied(false)
+    // Don't reload yet — user must dismiss the key banner first
+  }
+
+  async function handleCopyKey() {
+    if (!newlyCreatedKey) return
+    await navigator.clipboard.writeText(newlyCreatedKey)
+    setKeyCopied(true)
+    setTimeout(() => setKeyCopied(false), 2000)
+  }
+
+  function openEditPanel(license: License) {
+    setPendingEdit(license.id)
+    setEditError('')
+    setEditForm({
+      tier: license.tier,
+      seats: String(license.seats),
+      maxDataSources: license.maxDataSources != null ? String(license.maxDataSources) : '',
+      maxApiCalls: license.maxApiCalls != null ? String(license.maxApiCalls) : '',
+      expiresAt: license.expiresAt ? license.expiresAt.slice(0, 10) : '',
+    })
+  }
+
+  async function handleEditSubmit(licenseId: string) {
+    setEditLoading(true)
+    setEditError('')
+    const r = await fetch(`/api/portal/admin/organizations/${id}/licenses/${licenseId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tier: editForm.tier,
+        seats: Number(editForm.seats),
+        maxDataSources: editForm.maxDataSources !== '' ? Number(editForm.maxDataSources) : null,
+        maxApiCalls: editForm.maxApiCalls !== '' ? Number(editForm.maxApiCalls) : null,
+        expiresAt: editForm.expiresAt || null,
+      }),
+    })
+    if (!r.ok) {
+      const d = await r.json() as { error?: string }
+      setEditError(d.error ?? 'Failed to update license')
+      setEditLoading(false)
+      return
+    }
+    setPendingEdit(null)
+    setEditLoading(false)
     await load()
   }
 
@@ -239,6 +315,7 @@ export default function ClientDetailPage() {
           </button>
         </div>
 
+        {/* New license form */}
         {showNewLicense && (
           <form onSubmit={handleNewLicense} className="px-6 py-4 border-b border-white/10 bg-white/[0.02] space-y-3">
             <p className="text-sm font-medium text-white">New License</p>
@@ -248,7 +325,7 @@ export default function ClientDetailPage() {
                 <select
                   value={newProduct}
                   onChange={e => setNewProduct(e.target.value)}
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={INPUT_CLASS}
                 >
                   {['CORE', 'OPTIC', 'SEARCH', 'SDK', 'PLATFORM'].map(p => <option key={p}>{p}</option>)}
                 </select>
@@ -258,7 +335,7 @@ export default function ClientDetailPage() {
                 <select
                   value={newTier}
                   onChange={e => setNewTier(e.target.value)}
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={INPUT_CLASS}
                 >
                   {['STARTER', 'GROWTH', 'ENTERPRISE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
                 </select>
@@ -270,7 +347,7 @@ export default function ClientDetailPage() {
                   min={1}
                   value={newSeats}
                   onChange={e => setNewSeats(Number(e.target.value))}
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
@@ -282,7 +359,7 @@ export default function ClientDetailPage() {
                   value={newMonthlyValue}
                   onChange={e => setNewMonthlyValue(e.target.value)}
                   required
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
@@ -293,7 +370,7 @@ export default function ClientDetailPage() {
                   value={newMaxApi}
                   onChange={e => setNewMaxApi(e.target.value)}
                   placeholder="Unlimited"
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={`${INPUT_CLASS} placeholder-white/20`}
                 />
               </div>
               <div>
@@ -304,7 +381,7 @@ export default function ClientDetailPage() {
                   value={newMaxDs}
                   onChange={e => setNewMaxDs(e.target.value)}
                   placeholder="Unlimited"
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={`${INPUT_CLASS} placeholder-white/20`}
                 />
               </div>
               <div>
@@ -313,7 +390,7 @@ export default function ClientDetailPage() {
                   type="date"
                   value={newExpiresAt}
                   onChange={e => setNewExpiresAt(e.target.value)}
-                  className="w-full bg-black/60 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#00B8D4]/50"
+                  className={INPUT_CLASS}
                 />
               </div>
             </div>
@@ -337,34 +414,182 @@ export default function ClientDetailPage() {
           </form>
         )}
 
+        {/* Newly created key banner */}
+        {newlyCreatedKey && (
+          <div className="px-6 py-4 border-b border-white/10 bg-green-500/10 border border-green-500/30 rounded-xl m-4">
+            <p className="text-sm font-semibold text-green-400 mb-1">License created successfully</p>
+            <p className="text-xs text-white/50 mb-3">Your license key (shown once — copy it now):</p>
+            <div className="flex items-center gap-3">
+              <code className="flex-1 font-mono text-sm text-white bg-black/40 border border-white/10 rounded-lg px-4 py-2 tracking-wider">
+                {newlyCreatedKey}
+              </code>
+              <button
+                onClick={handleCopyKey}
+                className="flex items-center gap-1.5 text-xs border border-white/20 hover:border-white/40 text-white/70 hover:text-white px-3 py-2 rounded-lg transition-colors shrink-0"
+                title="Copy to clipboard"
+              >
+                {keyCopied ? <Check size={13} className="text-green-400" /> : <Copy size={13} />}
+                {keyCopied ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+            <div className="mt-3 flex justify-end">
+              <button
+                onClick={async () => { setNewlyCreatedKey(null); await load() }}
+                className="text-xs bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 px-4 py-1.5 rounded-lg transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="divide-y divide-white/5">
           {org.licenses.map(l => (
-            <div key={l.id} className="px-6 py-4 flex items-center justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3">
-                  <span className="font-medium text-white/90">{l.product}</span>
-                  <span className="text-xs text-white/40">{l.tier}</span>
+            <div key={l.id}>
+              {/* Normal license row — hidden when this license is being edited */}
+              {pendingEdit !== l.id && (
+                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium text-white/90">{l.product}</span>
+                      <span className="text-xs text-white/40">{l.tier}</span>
+                    </div>
+                    <p className="text-xs text-white/30 font-mono mt-0.5">{l.licenseKey}</p>
+                  </div>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className="text-sm font-semibold text-white">
+                      £{Number(l.monthlyValue).toLocaleString('en-GB', { minimumFractionDigits: 0 })}/mo
+                    </span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded border ${STATUS_STYLES[l.status] ?? STATUS_STYLES.SUSPENDED}`}>
+                      {l.status}
+                    </span>
+                    {/* Edit button — available for all statuses */}
+                    <button
+                      onClick={() => openEditPanel(l)}
+                      className="text-white/30 hover:text-white/70 transition-colors"
+                      title="Edit license"
+                    >
+                      <Pencil size={14} />
+                    </button>
+                    {/* Revoke button — only for active licenses */}
+                    {l.status === 'ACTIVE' && (
+                      <button
+                        onClick={() => { setPendingRevoke(l.id); setRevokeReason('') }}
+                        disabled={revoking === l.id}
+                        className="text-red-400/50 hover:text-red-400 transition-colors disabled:opacity-30"
+                        title="Revoke license"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xs text-white/30 font-mono mt-0.5">{l.licenseKey}</p>
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <span className="text-sm font-semibold text-white">
-                  £{Number(l.monthlyValue).toLocaleString('en-GB', { minimumFractionDigits: 0 })}/mo
-                </span>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded border ${STATUS_STYLES[l.status] ?? STATUS_STYLES.SUSPENDED}`}>
-                  {l.status}
-                </span>
-                {l.status === 'ACTIVE' && (
-                  <button
-                    onClick={() => handleRevoke(l.id)}
-                    disabled={revoking === l.id}
-                    className="text-red-400/50 hover:text-red-400 transition-colors disabled:opacity-30"
-                    title="Revoke license"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
+              )}
+
+              {/* Inline revoke panel */}
+              {pendingRevoke === l.id && (
+                <div className="px-6 py-4 bg-red-500/5 border-l-2 border-red-500/40">
+                  <p className="text-sm font-medium text-red-400 mb-3">Revoke license — {l.product} ({l.tier})</p>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={revokeReason}
+                      onChange={e => setRevokeReason(e.target.value)}
+                      placeholder="Reason (optional)"
+                      className={`${INPUT_CLASS} flex-1`}
+                    />
+                    <button
+                      onClick={() => handleRevoke(l.id)}
+                      disabled={revoking === l.id}
+                      className="shrink-0 bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 text-red-400 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+                    >
+                      {revoking === l.id ? 'Revoking...' : 'Confirm revoke'}
+                    </button>
+                    <button
+                      onClick={() => { setPendingRevoke(null); setRevokeReason('') }}
+                      className="shrink-0 border border-white/10 text-white/50 px-4 py-1.5 rounded-lg text-sm hover:bg-white/5 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Inline edit panel */}
+              {pendingEdit === l.id && (
+                <div className="px-6 py-4 bg-white/[0.02] border-l-2 border-[#00B8D4]/40">
+                  <p className="text-sm font-medium text-white mb-3">Edit license — {l.product}</p>
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    <div>
+                      <label className="block text-xs text-white/40 mb-1">Tier</label>
+                      <select
+                        value={editForm.tier}
+                        onChange={e => setEditForm(f => ({ ...f, tier: e.target.value }))}
+                        className={INPUT_CLASS}
+                      >
+                        {['STARTER', 'GROWTH', 'ENTERPRISE', 'PLATFORM'].map(t => <option key={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 mb-1">Seats</label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={editForm.seats}
+                        onChange={e => setEditForm(f => ({ ...f, seats: e.target.value }))}
+                        className={INPUT_CLASS}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 mb-1">Max Data Sources</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={editForm.maxDataSources}
+                        onChange={e => setEditForm(f => ({ ...f, maxDataSources: e.target.value }))}
+                        placeholder="Unlimited"
+                        className={`${INPUT_CLASS} placeholder-white/20`}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 mb-1">Max API Calls/mo</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={editForm.maxApiCalls}
+                        onChange={e => setEditForm(f => ({ ...f, maxApiCalls: e.target.value }))}
+                        placeholder="Unlimited"
+                        className={`${INPUT_CLASS} placeholder-white/20`}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 mb-1">Expires At</label>
+                      <input
+                        type="date"
+                        value={editForm.expiresAt}
+                        onChange={e => setEditForm(f => ({ ...f, expiresAt: e.target.value }))}
+                        className={INPUT_CLASS}
+                      />
+                    </div>
+                  </div>
+                  {editError && <p className="text-xs text-red-400 mb-2">{editError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditSubmit(l.id)}
+                      disabled={editLoading}
+                      className="bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-white px-4 py-1.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-all"
+                    >
+                      {editLoading ? 'Saving...' : 'Save changes'}
+                    </button>
+                    <button
+                      onClick={() => { setPendingEdit(null); setEditError('') }}
+                      className="border border-white/10 text-white/50 px-4 py-1.5 rounded-lg text-sm hover:bg-white/5 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
           {org.licenses.length === 0 && (
