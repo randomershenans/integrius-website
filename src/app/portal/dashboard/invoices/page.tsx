@@ -52,7 +52,7 @@ export default function InvoicesPage() {
   const outstanding = invoices.filter(i => i.status === 'PENDING' || i.status === 'OVERDUE')
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Invoices</h1>
         <p className="text-white/40 text-sm mt-1">Your billing history</p>

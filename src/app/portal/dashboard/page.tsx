@@ -119,7 +119,7 @@ export default function ClientDashboard() {
     .sort((a, b) => new Date(a.expires_at!).getTime() - new Date(b.expires_at!).getTime())[0]
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="text-white/40 text-sm mt-1">Your Integrius licenses and entitlements</p>

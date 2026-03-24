@@ -231,7 +231,7 @@ export default function ClientDetailPage() {
   const mrr = activeLicenses.reduce((s, l) => s + Number(l.monthlyValue), 0)
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/admin/clients" className="text-white/40 hover:text-white transition-colors">
           <ArrowLeft size={18} />
