@@ -1,142 +1,260 @@
-import Link from 'next/link';
-import prisma from '@/lib/prisma';
+'use client'
 
-export const dynamic = 'force-dynamic';
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { TrendingUp, Users, Key, AlertTriangle, FileText, Zap, Plus, ArrowRight } from 'lucide-react'
 
-async function getStats() {
-  const [total, published, draft, scheduled, pending_gen, linkedin_queue] = await Promise.all([
-    prisma.cms_articles.count(),
-    prisma.cms_articles.count({ where: { status: 'published' } }),
-    prisma.cms_articles.count({ where: { status: 'draft' } }),
-    prisma.cms_articles.count({ where: { status: 'scheduled' } }),
-    prisma.cms_generation_queue.count({ where: { status: 'pending' } }),
-    prisma.cms_articles.count({ where: { status: 'published', linkedin_shared: false } }),
-  ]);
-  return { total, published, draft, scheduled, pending_gen, linkedin_queue };
+interface BizStats {
+  mrr: number
+  arr: number
+  totalClients: number
+  activeClients: number
+  activeLicenses: number
+  churnRate: number
 }
 
-async function getRecentArticles() {
-  return prisma.cms_articles.findMany({
-    orderBy: { updated_at: 'desc' },
-    take: 8,
-    select: { id: true, title: true, slug: true, status: true, published_at: true, ai_generated: true, linkedin_shared: true },
-  });
+interface License {
+  id: string
+  license_key: string
+  product: string
+  tier: string
+  status: string
+  monthly_value: string
+  expires_at: string | null
+  portal_organizations: { id: string; name: string } | null
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    published: 'bg-green-500/15 text-green-400 border-green-500/30',
-    draft:     'bg-white/5 text-white/50 border-white/10',
-    scheduled: 'bg-[#00B8D4]/15 text-[#00B8D4] border-[#00B8D4]/30',
-  };
+interface OrgRow {
+  id: string
+  name: string
+  status: string
+  mrrContribution: number
+  createdAt: string
+}
+
+interface CmsStats {
+  published: number
+  draft: number
+  scheduled: number
+  pending_gen: number
+}
+
+function daysUntil(d: string) {
+  return Math.ceil((new Date(d).getTime() - Date.now()) / 86_400_000)
+}
+
+const PRODUCT_LABELS: Record<string, string> = {
+  CORE: 'Core', OPTIC: 'Optic', SEARCH: 'Search', SDK: 'SDK', PLATFORM: 'Platform',
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  ACTIVE:    'bg-green-500/15 text-green-400 border-green-500/30',
+  TRIAL:     'bg-blue-500/15 text-blue-400 border-blue-500/30',
+  SUSPENDED: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
+  CHURNED:   'bg-red-500/15 text-red-400 border-red-500/30',
+}
+
+export default function AdminDashboard() {
+  const [biz, setBiz] = useState<BizStats | null>(null)
+  const [licenses, setLicenses] = useState<License[]>([])
+  const [clients, setClients] = useState<OrgRow[]>([])
+  const [cms, setCms] = useState<CmsStats | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/portal/admin/dashboard').then(r => r.ok ? r.json() : null),
+      fetch('/api/portal/admin/licenses').then(r => r.ok ? r.json() : []),
+      fetch('/api/portal/admin/organizations').then(r => r.ok ? r.json() : []),
+      fetch('/api/admin/stats').then(r => r.ok ? r.json() : null),
+    ]).then(([bizData, licData, orgData, cmsData]) => {
+      setBiz(bizData)
+      setLicenses(licData ?? [])
+      setClients(orgData ?? [])
+      setCms(cmsData)
+      setLoading(false)
+    })
+  }, [])
+
+  const expiring = licenses
+    .filter(l => l.status === 'ACTIVE' && l.expires_at && daysUntil(l.expires_at) <= 60)
+    .sort((a, b) => new Date(a.expires_at!).getTime() - new Date(b.expires_at!).getTime())
+    .slice(0, 6)
+
+  const recentClients = [...clients]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 6)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-5 h-5 border-2 border-[#00B8D4] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
   return (
-    <span className={`text-xs font-medium px-2 py-0.5 rounded border ${styles[status] ?? styles.draft}`}>
-      {status}
-    </span>
-  );
-}
-
-export default async function AdminDashboard() {
-  const [stats, recent] = await Promise.all([getStats(), getRecentArticles()]);
-
-  const statCards = [
-    { label: 'Published',     value: stats.published,     color: 'text-green-600' },
-    { label: 'Drafts',        value: stats.draft,         color: 'text-gray-600'  },
-    { label: 'Scheduled',     value: stats.scheduled,     color: 'text-blue-600'  },
-    { label: 'Gen. queue',    value: stats.pending_gen,   color: 'text-purple-600' },
-    { label: 'LinkedIn queue',value: stats.linkedin_queue,color: 'text-orange-600' },
-  ];
-
-  return (
-    <div className="p-8">
+    <div className="p-8 max-w-6xl">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <div className="flex gap-3">
-          <Link href="/admin/generate" className="bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-[#0091EA] hover:to-[#0288D1] transition-all">
-            Generate article
-          </Link>
-          <Link href="/admin/articles/new" className="border border-white/10 text-white/70 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white/5 transition-colors">
-            Write manually
-          </Link>
+        <Link
+          href="/admin/clients/new"
+          className="flex items-center gap-2 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-[#0091EA] hover:to-[#0288D1] transition-all"
+        >
+          <Plus size={14} />
+          New client
+        </Link>
+      </div>
+
+      {/* Business metrics */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <div className="bg-black/40 rounded-xl border border-white/10 p-5 lg:col-span-1">
+          <p className="text-xs text-white/40 mb-1 flex items-center gap-1.5"><TrendingUp size={11} />MRR</p>
+          <p className="text-2xl font-bold text-white">
+            £{biz ? biz.mrr.toLocaleString('en-GB') : '—'}
+          </p>
+          <p className="text-xs text-white/30 mt-0.5">per month</p>
+        </div>
+        <div className="bg-black/40 rounded-xl border border-white/10 p-5">
+          <p className="text-xs text-white/40 mb-1">ARR</p>
+          <p className="text-2xl font-bold text-white">
+            £{biz ? biz.arr.toLocaleString('en-GB') : '—'}
+          </p>
+          <p className="text-xs text-white/30 mt-0.5">annualised</p>
+        </div>
+        <div className="bg-black/40 rounded-xl border border-white/10 p-5">
+          <p className="text-xs text-white/40 mb-1 flex items-center gap-1.5"><Users size={11} />Clients</p>
+          <p className="text-2xl font-bold text-white">{biz?.activeClients ?? '—'}</p>
+          <p className="text-xs text-white/30 mt-0.5">of {biz?.totalClients ?? '—'} total</p>
+        </div>
+        <div className="bg-black/40 rounded-xl border border-white/10 p-5">
+          <p className="text-xs text-white/40 mb-1 flex items-center gap-1.5"><Key size={11} />Licenses</p>
+          <p className="text-2xl font-bold text-white">{biz?.activeLicenses ?? '—'}</p>
+          <p className="text-xs text-white/30 mt-0.5">active</p>
+        </div>
+        <div className={`rounded-xl border p-5 ${expiring.length > 0 ? 'bg-yellow-500/[0.06] border-yellow-500/20' : 'bg-black/40 border-white/10'}`}>
+          <p className={`text-xs mb-1 flex items-center gap-1.5 ${expiring.length > 0 ? 'text-yellow-400/70' : 'text-white/40'}`}>
+            <AlertTriangle size={11} />Expiring soon
+          </p>
+          <p className={`text-2xl font-bold ${expiring.length > 0 ? 'text-yellow-400' : 'text-white'}`}>{expiring.length}</p>
+          <p className={`text-xs mt-0.5 ${expiring.length > 0 ? 'text-yellow-400/50' : 'text-white/30'}`}>within 60 days</p>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-5 gap-4 mb-10">
-        {statCards.map(s => (
-          <div key={s.label} className="bg-black/40 rounded-xl border border-white/10 p-5">
-            <p className="text-xs text-white/40 mb-1">{s.label}</p>
-            <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Expiring licenses */}
+        <div className="bg-black/40 rounded-xl border border-white/10">
+          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+            <h2 className="font-semibold text-white text-sm">Expiring licenses</h2>
+            <Link href="/admin/licenses?filter=EXPIRING" className="text-xs text-[#00B8D4] hover:underline flex items-center gap-1">
+              View all <ArrowRight size={11} />
+            </Link>
           </div>
-        ))}
-      </div>
-
-      {/* Recent articles */}
-      <div className="bg-black/40 rounded-xl border border-white/10">
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-          <h2 className="font-semibold text-white">Recent articles</h2>
-          <Link href="/admin/articles" className="text-sm text-[#00B8D4] hover:underline">View all</Link>
-        </div>
-        <div className="divide-y divide-white/5">
-          {recent.map(a => (
-            <div key={a.id} className="px-6 py-4 flex items-center justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <Link href={`/admin/articles/${a.id}`} className="font-medium text-white/90 hover:text-[#00B8D4] truncate block transition-colors">
-                  {a.title}
-                </Link>
-                <p className="text-xs text-white/40 mt-0.5">
-                  {a.published_at
-                    ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(a.published_at)
-                    : 'Not published'}
-                  {a.ai_generated && ' · AI'}
-                </p>
-              </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <StatusBadge status={a.status} />
-                {a.status === 'published' && !a.linkedin_shared && (
-                  <span className="text-xs text-orange-400 font-medium">LinkedIn pending</span>
-                )}
-              </div>
+          {expiring.length === 0 ? (
+            <div className="px-6 py-10 text-center">
+              <Key size={24} className="text-white/10 mx-auto mb-2" />
+              <p className="text-sm text-white/30">No licenses expiring in the next 60 days</p>
             </div>
-          ))}
-          {recent.length === 0 && (
-            <p className="px-6 py-8 text-center text-white/30 text-sm">No articles yet. Generate your first one.</p>
+          ) : (
+            <div className="divide-y divide-white/5">
+              {expiring.map(l => {
+                const days = daysUntil(l.expires_at!)
+                return (
+                  <Link
+                    key={l.id}
+                    href={l.portal_organizations ? `/admin/clients/${l.portal_organizations.id}` : '/admin/licenses'}
+                    className="flex items-center justify-between gap-4 px-6 py-3.5 hover:bg-white/[0.02] transition-colors"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-white/90 truncate">
+                        {l.portal_organizations?.name ?? 'Unassigned'}
+                      </p>
+                      <p className="text-xs text-white/40 mt-0.5">
+                        Integrius {PRODUCT_LABELS[l.product] ?? l.product} · {l.tier.charAt(0) + l.tier.slice(1).toLowerCase()}
+                      </p>
+                    </div>
+                    <span className={`text-xs font-semibold shrink-0 ${days <= 14 ? 'text-red-400' : days <= 30 ? 'text-orange-400' : 'text-yellow-400'}`}>
+                      {days}d
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Recent clients */}
+        <div className="bg-black/40 rounded-xl border border-white/10">
+          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+            <h2 className="font-semibold text-white text-sm">Recent clients</h2>
+            <Link href="/admin/clients" className="text-xs text-[#00B8D4] hover:underline flex items-center gap-1">
+              View all <ArrowRight size={11} />
+            </Link>
+          </div>
+          {recentClients.length === 0 ? (
+            <div className="px-6 py-10 text-center">
+              <Users size={24} className="text-white/10 mx-auto mb-2" />
+              <p className="text-sm text-white/30">No clients yet</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5">
+              {recentClients.map(org => (
+                <Link
+                  key={org.id}
+                  href={`/admin/clients/${org.id}`}
+                  className="flex items-center justify-between gap-4 px-6 py-3.5 hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-semibold text-white/50">{org.name.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <p className="text-sm font-medium text-white/90 truncate">{org.name}</p>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm font-semibold text-white">
+                      £{org.mrrContribution.toLocaleString('en-GB')}
+                    </span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded border ${STATUS_STYLES[org.status] ?? STATUS_STYLES.SUSPENDED}`}>
+                      {org.status}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       </div>
 
-      {/* Client Management */}
+      {/* CMS quick stats */}
       <div className="bg-black/40 rounded-xl border border-white/10">
-        <div className="px-6 py-4 border-b border-white/10">
-          <h2 className="font-semibold text-white">Client Management</h2>
+        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+          <h2 className="font-semibold text-white text-sm flex items-center gap-2">
+            <FileText size={14} className="text-white/40" />
+            Website &amp; Blog
+          </h2>
+          <div className="flex items-center gap-3">
+            <Link href="/admin/generate" className="text-xs text-[#00B8D4] hover:underline flex items-center gap-1">
+              <Zap size={11} />Generate
+            </Link>
+            <Link href="/admin/articles" className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1">
+              Articles <ArrowRight size={11} />
+            </Link>
+          </div>
         </div>
-        <div className="grid grid-cols-2 divide-x divide-white/5">
-          <Link
-            href="/admin/clients"
-            className="px-6 py-5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors"
-          >
-            <div className="w-10 h-10 rounded-lg bg-[#00B8D4]/10 border border-[#00B8D4]/20 flex items-center justify-center shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#00B8D4]"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+        <div className="grid grid-cols-4 divide-x divide-white/5">
+          {[
+            { label: 'Published', value: cms?.published ?? '—', color: 'text-green-400' },
+            { label: 'Drafts',    value: cms?.draft ?? '—',      color: 'text-white/50' },
+            { label: 'Scheduled', value: cms?.scheduled ?? '—',  color: 'text-[#00B8D4]' },
+            { label: 'Gen queue', value: cms?.pending_gen ?? '—', color: 'text-purple-400' },
+          ].map(s => (
+            <div key={s.label} className="px-6 py-4">
+              <p className="text-xs text-white/30 mb-1">{s.label}</p>
+              <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
             </div>
-            <div>
-              <p className="font-medium text-white/90">Clients</p>
-              <p className="text-xs text-white/40 mt-0.5">View and manage all client organisations</p>
-            </div>
-          </Link>
-          <Link
-            href="/admin/licenses"
-            className="px-6 py-5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors"
-          >
-            <div className="w-10 h-10 rounded-lg bg-[#00B8D4]/10 border border-[#00B8D4]/20 flex items-center justify-center shrink-0">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#00B8D4]"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
-            </div>
-            <div>
-              <p className="font-medium text-white/90">Licenses</p>
-              <p className="text-xs text-white/40 mt-0.5">View all active and expiring licenses</p>
-            </div>
-          </Link>
+          ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
