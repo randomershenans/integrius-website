@@ -1,9 +1,9 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const secret = new TextEncoder().encode(
-  process.env.CMS_JWT_SECRET ?? 'dev-secret-change-in-production'
-);
+const jwtSecret = process.env.CMS_JWT_SECRET;
+if (!jwtSecret) throw new Error('CMS_JWT_SECRET environment variable is not set');
+const secret = new TextEncoder().encode(jwtSecret);
 
 const COOKIE = 'cms_admin_token';
 const TTL_HOURS = 12;
