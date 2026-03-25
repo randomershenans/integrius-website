@@ -225,6 +225,45 @@ export default function IntegriusCorePage() {
           </div>
         </section>
 
+        {/* Blast Radius / Dependency Graph */}
+        <section className="py-24 relative">
+          <div className="w-full px-4 md:px-8">
+            <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Eye className="w-8 h-8 text-cyan-400" />
+                <h2 className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
+                  Blast Radius. Before You Pull the Trigger.
+                </h2>
+              </div>
+              <p className="text-lg text-center mb-8 max-w-3xl mx-auto text-white/80">
+                Every data product knows what it depends on and what depends on it. Change a source schema, remove a field, revoke access — and see exactly what breaks before you do it.
+              </p>
+              <div className="rounded-xl overflow-hidden border border-cyan-500/20 mb-6 shadow-2xl shadow-cyan-500/10">
+                <img
+                  src="/screenshots/integrius-dependency-graph.gif"
+                  alt="Integrius dependency graph and blast radius explorer"
+                  className="w-full"
+                />
+                <div className="px-4 py-2 bg-black/60 border-t border-white/10 text-center">
+                  <p className="text-xs text-white/40">Live dependency graph. Blast radius computed in real time. Every upstream and downstream relationship, visualised.</p>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                {[
+                  { label: 'Schema change', body: 'See every downstream product affected before you touch the source.' },
+                  { label: 'Access revocation', body: 'Remove a team from a data product and immediately see which of their workflows break.' },
+                  { label: 'Cascade simulation', body: 'Run impact analysis without making a single change. No surprises in production.' },
+                ].map((item, i) => (
+                  <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <p className="font-semibold text-cyan-400 text-sm mb-1">{item.label}</p>
+                    <p className="text-white/60 text-sm">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </FloatingElement>
+          </div>
+        </section>
+
         {/* Permission Explorer */}
         <section className="py-24 relative">
           <div className="w-full px-4 md:px-8">
@@ -235,8 +274,8 @@ export default function IntegriusCorePage() {
                   Permission Explorer — The Feature That Unblocks Data Sharing
                 </h2>
               </div>
-              <p className="text-lg text-center mb-4 max-w-3xl mx-auto text-white/80">
-                Companies don&apos;t share data internally because they cannot prove who has access. Permission Explorer proves it — visually.
+              <p className="text-lg text-center mb-8 max-w-3xl mx-auto text-white/80">
+                Companies don&apos;t share data internally because they cannot prove who has access. Permission Explorer proves it, visually.
               </p>
               <div className="grid md:grid-cols-2 gap-6 mb-10">
                 {permissionFeatures.map((item, index) => (
