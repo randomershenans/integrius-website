@@ -13,6 +13,9 @@ export function SiteHeader() {
           Home
         </Link>
         <ProductsDropdown />
+        <Link className="text-sm font-medium text-white/80 hover:text-[#00B8D4] transition-colors" href="/use-cases">
+          Use Cases
+        </Link>
         <Link className="text-sm font-medium text-white/80 hover:text-[#00B8D4] transition-colors" href="/blog">
           Blog
         </Link>
