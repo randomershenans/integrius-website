@@ -17,11 +17,11 @@ const controls = [
   },
   {
     label: 'SSO',
-    detail: 'SAML 2.0 + OIDC — Okta, Azure AD, Google Workspace, Auth0',
+    detail: 'SAML 2.0 + OIDC: Okta, Azure AD, Google Workspace, Auth0',
   },
   {
     label: 'Provisioning',
-    detail: 'SCIM 2.0 (RFC 7644) — Okta and Azure AD compatible',
+    detail: 'SCIM 2.0 (RFC 7644), Okta and Azure AD compatible',
   },
   {
     label: 'MFA',
@@ -29,7 +29,7 @@ const controls = [
   },
   {
     label: 'Audit logs',
-    detail: 'Every action logged — user, resource, status, IP, user agent, timestamp',
+    detail: 'Every action logged: user, resource, status, IP, user agent, timestamp',
   },
   {
     label: 'SIEM export',

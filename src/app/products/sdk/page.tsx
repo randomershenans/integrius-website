@@ -17,7 +17,7 @@ const sdkCards = [
     description: 'For TypeScript/JavaScript applications, internal tools, and automation',
     bullets: [
       'Full type-safe API with generated TypeScript types',
-      'Event stream access — subscribe to 34 event types',
+      'Event stream access: subscribe to 34 event types',
       'Data product queries with pagination, filtering, and projection',
     ],
     accent: 'text-red-400',
@@ -31,7 +31,7 @@ const sdkCards = [
     installLink: null,
     description: 'For data engineering teams, ML pipelines, and notebooks',
     bullets: [
-      'Pandas-friendly output — returns DataFrames directly',
+      'Pandas-friendly output, returns DataFrames directly',
       'Jupyter notebook integration',
       '"The data engineering team writes a script that pulls from the Revenue Analytics data product, joins with internal metrics, and feeds their ML pipeline. 15 lines of code."',
     ],
@@ -47,7 +47,7 @@ const sdkCards = [
     description: 'Infrastructure-as-code teams manage data products via CLI + API',
     bullets: [
       '25+ commands covering products, sources, events, and lineage',
-      'Zero external dependencies — Node.js built-ins only',
+      'Zero external dependencies. Node.js built-ins only.',
       'JSON and table output modes for scripting and humans',
     ],
     accent: 'text-emerald-400',
@@ -57,12 +57,12 @@ const sdkCards = [
 ];
 
 const features = [
-  { icon: Code, title: 'One Schema, Every System', description: 'Pull from Salesforce, PostgreSQL, MySQL, APIs — whatever. Output one clean, consistent data structure every time. No more spaghetti code mapping fields.' },
+  { icon: Code, title: 'One Schema, Every System', description: 'Pull from Salesforce, PostgreSQL, MySQL, APIs, whatever. Output one clean, consistent data structure every time. No more spaghetti code mapping fields.' },
   { icon: Zap, title: 'Build in Days, Not Months', description: 'Stop spending 80% of dev time on data plumbing. Build the features that actually matter. Ship customer-facing products in days instead of quarters.' },
   { icon: RefreshCw, title: 'Schema Changes? No Problem.', description: 'Upstream systems change all the time. With TOON AI, schema changes don\'t break your code. We adapt automatically. You keep shipping.' },
   { icon: Layers, title: 'Built on Integrius Core', description: 'Get all the power of unified data access with developer-friendly abstractions. The SDK handles complexity. You handle business logic.' },
   { icon: Sparkles, title: 'AI-Powered Auto-Mapping', description: 'TOON understands your data. It maps fields, harmonizes formats, and resolves conflicts automatically. You focus on features, not field mapping.' },
-  { icon: CheckCircle2, title: 'Governance Built-In', description: 'Every SDK call respects RBAC, field-level access controls, and consumer scoping. Your governed data stays governed — no shadow API paths.' },
+  { icon: CheckCircle2, title: 'Governance Built-In', description: 'Every SDK call respects RBAC, field-level access controls, and consumer scoping. Your governed data stays governed, with no shadow API paths.' },
 ];
 
 const useCases = [
@@ -132,7 +132,7 @@ export default function IntegriusSDKPage() {
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white">Integrius SDK</h1>
                 <p className="text-2xl font-semibold text-[#00B8D4]">npm package. Python library. CLI. Three ways to build on your governed data platform.</p>
                 <p className="mx-auto max-w-[700px] text-white/80 text-lg md:text-xl">
-                  Developer tools for building on top of Integrius. Pull governed data products into your applications, pipelines, and automation — without writing integration plumbing.
+                  Developer tools for building on top of Integrius. Pull governed data products into your applications, pipelines, and automation, without writing integration plumbing.
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex items-center gap-4">

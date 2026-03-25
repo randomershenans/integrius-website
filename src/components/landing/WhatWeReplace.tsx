@@ -17,7 +17,7 @@ const rows = [
     tool: 'Elasticsearch',
     category: 'search infrastructure',
     cost: '€50–150K + infra team',
-    replacement: 'Search: federated, semantic, entity resolution — no separate infra',
+    replacement: 'Search: federated, semantic, entity resolution. No separate infra.',
   },
   {
     tool: 'Tableau / Power BI',
@@ -35,7 +35,7 @@ const rows = [
     tool: 'Mixpanel / Amplitude / Segment',
     category: 'product analytics',
     cost: '€50–200K',
-    replacement: 'Core: event-driven architecture — analytics is a byproduct, no SDK',
+    replacement: 'Core: event-driven architecture. Analytics is a byproduct, no SDK.',
   },
   {
     tool: 'Custom middleware / API gateway',
@@ -58,7 +58,7 @@ export function WhatWeReplace() {
         <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.1}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text mb-4">
-              What Integrius replaces — and what it costs you not to.
+              What Integrius replaces. And what it costs you not to.
             </h2>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
               Your current stack is a collection of tools that don&apos;t talk to each other. Here&apos;s the honest math.
