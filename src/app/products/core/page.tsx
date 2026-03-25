@@ -38,7 +38,7 @@ const typeColors: Record<string, string> = {
 const eventConsequences = [
   {
     heading: 'No product analytics SDK needed.',
-    body: 'No Mixpanel. No Amplitude. No Segment. "How many API calls did the finance team make this month?" — query the event log data product. No tracking code.',
+    body: 'No Mixpanel. No Amplitude. No Segment. "How many API calls did the finance team make this month?" Just query the event log data product. No tracking code.',
   },
   {
     heading: 'Usage-based billing comes free from the event stream.',
@@ -106,7 +106,7 @@ export default function IntegriusCorePage() {
                 </h1>
                 <p className="text-2xl font-semibold text-[#00B8D4]">The Unified Enterprise Data Layer</p>
                 <p className="mx-auto max-w-[700px] text-white/80 text-lg md:text-xl">
-                  The backbone that changes everything. Connect all your systems into one unified, real-time API — without data lakes, rewrites, migrations, or retiring old systems.
+                  The backbone that changes everything. Connect all your systems into one unified, real-time API, without data lakes, rewrites, migrations, or retiring old systems.
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
@@ -151,7 +151,7 @@ export default function IntegriusCorePage() {
           <div className="w-full px-4 md:px-8">
             <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
               <h2 className="text-3xl font-bold tracking-tighter text-center mb-4 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
-                13 Connectors — All Included at Every Tier
+                13 Connectors, All Included at Every Tier
               </h2>
               <p className="text-lg text-center mb-12 max-w-3xl mx-auto text-white/80">
                 No connector marketplace. No add-on fees. Every connector ships with every plan.
@@ -206,7 +206,7 @@ export default function IntegriusCorePage() {
                 34 event types across 13 categories. Every state change emits an event.
               </p>
               <p className="text-center mb-12 max-w-3xl mx-auto text-white/60 italic">
-                This is not a logging system bolted on after the fact — it is the architecture.
+                This is not a logging system bolted on after the fact. It is the architecture.
               </p>
               <div className="grid md:grid-cols-2 gap-6">
                 {eventConsequences.map((item, index) => (
@@ -232,12 +232,25 @@ export default function IntegriusCorePage() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Eye className="w-8 h-8 text-cyan-400" />
                 <h2 className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
-                  Permission Explorer — The Feature That Unblocks Data Sharing
+                  Permission Explorer: The Feature That Unblocks Data Sharing
                 </h2>
               </div>
-              <p className="text-lg text-center mb-4 max-w-3xl mx-auto text-white/80">
-                Companies don&apos;t share data internally because they cannot prove who has access. Permission Explorer proves it — visually.
+              <p className="text-lg text-center mb-8 max-w-3xl mx-auto text-white/80">
+                Companies don&apos;t share data internally because they cannot prove who has access. Permission Explorer proves it, visually.
               </p>
+
+              {/* Blast radius / dependency graph */}
+              <div className="rounded-xl overflow-hidden border border-cyan-500/20 mb-10 shadow-2xl shadow-cyan-500/10">
+                <img
+                  src="/screenshots/integrius-dependency-graph.gif"
+                  alt="Integrius dependency graph and blast radius"
+                  className="w-full"
+                />
+                <div className="px-4 py-2 bg-black/60 border-t border-white/10 text-center">
+                  <p className="text-xs text-white/40">Dependency graph and blast radius. See the full impact of any change before you make it.</p>
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-6 mb-10">
                 {permissionFeatures.map((item, index) => (
                   <motion.div
@@ -331,7 +344,7 @@ export default function IntegriusCorePage() {
                 </div>
                 <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
                   <p className="text-2xl font-bold text-cyan-400 mb-1">Graceful</p>
-                  <p className="text-sm text-white/60">Stale snapshot served if refresh fails — never a dead endpoint</p>
+                  <p className="text-sm text-white/60">Stale snapshot served if refresh fails. Never a dead endpoint.</p>
                 </div>
               </div>
             </FloatingElement>

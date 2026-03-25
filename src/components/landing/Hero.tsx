@@ -2,8 +2,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-const tags = ['Data Products', 'Governance', 'Search', 'Optic', 'Self-Hosted', 'Air-Gapped'];
-
 const heroStats = [
   { value: '33ms', label: 'p50 response time' },
   { value: '5 min', label: 'Docker to live platform' },
@@ -15,23 +13,6 @@ export function Hero() {
     <section className="min-h-screen flex items-center justify-center relative">
       <div className="container px-4 md:px-6 relative z-10">
         <div className="flex flex-col items-center space-y-10 text-center max-w-4xl mx-auto">
-
-          {/* Tag pills */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-wrap justify-center gap-2"
-          >
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"
-              >
-                {tag}
-              </span>
-            ))}
-          </motion.div>
 
           {/* Headline */}
           <motion.div
@@ -48,7 +29,7 @@ export function Hero() {
             </h1>
             <p className="mx-auto max-w-3xl text-white/70 text-lg md:text-xl leading-relaxed">
               The self-hosted platform that replaces your data catalog, ETL pipelines, enterprise
-              search, BI tools, and product analytics — with governed data products, event-driven
+              search, BI tools, and product analytics. Governed data products, event-driven
               intelligence, AI-powered analytics, and zero data leakage.
             </p>
           </motion.div>
@@ -66,12 +47,6 @@ export function Hero() {
             >
               Start a Pilot
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/technical-brief"
-              className="inline-flex items-center gap-2 border border-cyan-500/30 text-cyan-400 px-8 py-3 rounded-lg font-semibold text-base hover:border-cyan-500/60 hover:bg-cyan-500/5 transition-all"
-            >
-              Read the Technical Brief
             </Link>
           </motion.div>
 

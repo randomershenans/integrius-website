@@ -32,7 +32,7 @@ const howItWorks = [
 
 const capabilities = [
   { capability: 'Federated search', details: 'One API call spans all data products the caller has access to' },
-  { capability: 'Fuzzy matching', details: 'Levenshtein distance, 70% similarity threshold — typos still find results' },
+  { capability: 'Fuzzy matching', details: 'Levenshtein distance, 70% similarity threshold. Typos still find results.' },
   { capability: 'Semantic search', details: 'Intent-based matching: "revenue data" finds mrr, arr, monthly_recurring_revenue' },
   { capability: 'Autocomplete', details: 'Suggest endpoint returns matching products, fields, entity types as you type' },
   { capability: 'Faceted results', details: 'Counts by product and entity type for drill-down' },
@@ -323,7 +323,7 @@ export default function IntegriusSearchPage() {
               </div>
               <div className="max-w-3xl mx-auto p-5 rounded-xl bg-white/5 border border-white/10">
                 <p className="text-white/70 text-sm">
-                  <span className="text-cyan-400 font-semibold">Why €100,000/year?</span> Integrius Search is different from Elastic or Algolia — it searches live governed data with no indexing required. One API call, complete picture, governed results.
+                  <span className="text-cyan-400 font-semibold">Why €100,000/year?</span> Integrius Search is different from Elastic or Algolia. It searches live governed data with no indexing required. One API call, complete picture, governed results.
                 </p>
               </div>
               <p className="text-center text-sm text-white/40 mt-4">Requires an active Integrius unified data layer.</p>

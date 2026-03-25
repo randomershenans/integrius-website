@@ -2,10 +2,10 @@ import { FloatingElement } from '@/components/landing/FloatingElement';
 
 const timeline = [
   { time: 'Minute 1–5', event: 'Docker running. Setup wizard complete. Platform live.' },
-  { time: 'Minute 10', event: 'First 3 data sources connected — Salesforce, Postgres, S3. No code.' },
+  { time: 'Minute 10', event: 'First 3 data sources connected: Salesforce, Postgres, S3. No code.' },
   { time: 'Minute 20', event: 'First unified data product serving a live API endpoint. Entity resolution matching customers across sources.' },
   { time: 'Minute 30', event: 'Search returns results from all connected sources. Autocomplete working.' },
-  { time: 'Minute 35', event: 'First question answered in Optic: "How many customers do we have?" — KPI card + chart + narrative.' },
+  { time: 'Minute 35', event: 'First question answered in Optic: "How many customers do we have?" Returns a KPI card, chart, and narrative.' },
   { time: 'Hour 1', event: 'Dashboard built with 4 tiles. Shared with the team via URL.' },
   { time: 'Hour 2', event: 'Permissions configured. Permission Explorer shows compliance officer exactly who can see what.' },
   { time: 'Day 1', event: 'Production data flowing. Team using it daily.' },

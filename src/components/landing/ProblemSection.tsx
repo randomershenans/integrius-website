@@ -4,7 +4,7 @@ const problems = [
   {
     number: '01',
     title: 'No common language across systems',
-    body: 'Salesforce calls it AccountId. Shopify calls it customer.id. HubSpot calls it vid. Same concept, different names, no common language — and nobody owns the translation.',
+    body: 'Salesforce calls it AccountId. Shopify calls it customer.id. HubSpot calls it vid. Same concept, different names, no common language. Nobody owns the translation.',
   },
   {
     number: '02',
@@ -19,7 +19,7 @@ const problems = [
   {
     number: '04',
     title: 'BI tools require the cloud',
-    body: 'Tableau, ThoughtSpot, and Power BI Copilot all send data to external servers. For regulated industries — finance, healthcare, defence — this is a non-starter, not a risk to manage.',
+    body: 'Tableau, ThoughtSpot, and Power BI Copilot all send data to external servers. For regulated industries (finance, healthcare, defence), this is a non-starter, not a risk to manage.',
   },
   {
     number: '05',

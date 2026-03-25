@@ -32,8 +32,8 @@ const comparisonRows = [
   { concern: 'Governance built-in', tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Full lineage + RBAC' },
   { concern: 'Per-seat pricing',    tableau: 'Yes',      thoughtspot: 'Yes',         powerbi: 'Yes',         optic: 'No' },
   { concern: 'Forecasting built-in',tableau: 'No',       thoughtspot: 'Limited',     powerbi: 'Limited',     optic: 'Auto on every answer' },
-  { concern: 'Simulation',          tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Yes — on governed data' },
-  { concern: 'Predictive watchers', tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Yes — alerts before thresholds' },
+  { concern: 'Simulation',          tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Yes, on governed data' },
+  { concern: 'Predictive watchers', tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Yes, alerts before thresholds' },
   { concern: 'PPTX export',         tableau: 'No',       thoughtspot: 'No',          powerbi: 'Yes',         optic: 'Yes' },
   { concern: 'Automated workflows', tableau: 'No',       thoughtspot: 'No',          powerbi: 'No',          optic: 'Yes (Skills)' },
 ];
@@ -57,10 +57,10 @@ const modes = [
     title: 'Explore Mode',
     tagline: 'Persistent Sessions, Real-Time Signals',
     description:
-      'Multi-turn conversational analysis that remembers context across questions — and across sessions.',
+      'Multi-turn conversational analysis that remembers context across questions and across sessions.',
     examples: [
-      '"Show me revenue" → "Break it down by tier" → "Just enterprise" → "Compare to last quarter" — each question builds on the last',
-      'Real-time violet signals appear automatically showing predictions and forecasts on every answer — no configuration, no setup',
+      '"Show me revenue" → "Break it down by tier" → "Just enterprise" → "Compare to last quarter". Each question builds on the last.',
+      'Real-time violet signals appear automatically showing predictions and forecasts on every answer. No configuration, no setup.',
       'Sessions persist. Close your browser, come back tomorrow, continue where you left off.',
     ],
   },
@@ -72,8 +72,8 @@ const modes = [
       'Pin any answer as a tile, arrange a multi-tile grid, switch chart types, share via URL, and export to PPTX.',
     examples: [
       'Chart type switching (bar, line, pie) per tile',
-      'Share via URL — anyone with the link sees live data, refreshed on every view',
-      'CFO builds a 6-tile revenue dashboard in 5 minutes — ARR trend, MRR by region, net retention, expansion revenue, churn rate, pipeline value — exports to PowerPoint for the Thursday board meeting. No analyst involved.',
+      'Share via URL. Anyone with the link sees live data, refreshed on every view.',
+      'CFO builds a 6-tile revenue dashboard in 5 minutes (ARR trend, MRR by region, net retention, expansion revenue, churn rate, pipeline value) and exports to PowerPoint for the Thursday board meeting. No analyst involved.',
     ],
   },
   {
@@ -93,7 +93,7 @@ const modes = [
     title: 'Briefs',
     tagline: 'AI executive briefs. Two minutes. Zero fluff.',
     description:
-      'AI-generated executive briefs — concise, actionable summaries for time-starved leaders.',
+      'AI-generated executive briefs: concise, actionable summaries for time-starved leaders.',
     examples: [
       '"Give me a 2-minute briefing on customer health before my 10am" → 3 accounts flagged at-risk, net retention at 112%, 2 expansion opportunities identified, 1 support escalation requiring attention.',
     ],
@@ -103,7 +103,7 @@ const modes = [
     title: 'Forecast / Predict Explorer',
     tagline: 'Auto-forecast on every answer. No data science team needed.',
     description:
-      'Full prediction explorer — any metric, any time horizon. Violet forecast signals appear on every answer automatically.',
+      'Full prediction explorer: any metric, any time horizon. Violet forecast signals appear on every answer automatically.',
     examples: [
       '"What\'s our projected ARR in 6 months?" → trend line + confidence interval + narrative',
       '"Predict enrollment completion date for trial" → projection based on current velocity + confidence bands',
@@ -118,7 +118,7 @@ const modes = [
     examples: [],
     watcherTypes: [
       { label: 'Threshold', text: '"Alert when MRR drops below €500K"' },
-      { label: 'Anomaly', text: '"Alert on unusual patterns in transaction volume" — detects deviations from baseline automatically' },
+      { label: 'Anomaly', text: '"Alert on unusual patterns in transaction volume". Detects deviations from baseline automatically.' },
       { label: 'Forecast (Predictive)', text: '"Predict when churn rate will exceed 5% and alert me 2 weeks in advance." The alert fires before the problem happens.', highlight: true },
       { label: 'Trend', text: '"Alert when growth rate decelerates for 3 consecutive months"' },
       { label: 'Comparison', text: '"Alert when APAC revenue falls below 80% of EMEA"' },
@@ -129,7 +129,7 @@ const modes = [
     title: 'Simulation ("What If")',
     tagline: 'Run scenarios on live governed data.',
     description:
-      'Results show with a violet "Simulated" badge so users never confuse simulations with real data. Trustworthy because the underlying data is governed — not a spreadsheet exercise on stale exports.',
+      'Results show with a violet "Simulated" badge so users never confuse simulations with real data. Trustworthy because the underlying data is governed, not a spreadsheet exercise on stale exports.',
     examples: [
       '"What if we lose our top 3 accounts?" → instant revenue impact, affected products, downstream effects',
       '"What if we add 2 engineers to the data team?" → projected capacity increase, roadmap impact',
@@ -162,7 +162,7 @@ const modes = [
     title: 'Marketplace',
     tagline: 'Browse all Core data products from inside Optic.',
     description:
-      'Click any product, explore it with natural language. See schemas, field descriptions, quality scores — before you ask a single question. Data discovery and data analysis in one interface.',
+      'Click any product, explore it with natural language. See schemas, field descriptions, and quality scores before you ask a single question. Data discovery and data analysis in one interface.',
     examples: [],
   },
 ];
@@ -172,16 +172,16 @@ const replacementRows = [
   { tool: 'Tableau / Looker',         optic: '29 chart types, dashboards, PDF/PPTX export' },
   { tool: 'Mixpanel / Amplitude',     optic: 'Event stream, signals, user behaviour forecasting' },
   { tool: 'PagerDuty',               optic: 'Watchers + email alerts + in-app toasts on any metric' },
-  { tool: 'DataRobot / obviously.ai', optic: 'Forecast engine — trend extrapolation, confidence bands, predictive alerts' },
+  { tool: 'DataRobot / obviously.ai', optic: 'Forecast engine: trend extrapolation, confidence bands, predictive alerts' },
   { tool: 'Klipfolio / Geckoboard',   optic: 'Live dashboards from any Core data product' },
   { tool: 'Notion AI + docs',         optic: 'Brief generator, report builder with narrative' },
   { tool: 'Monte Carlo / Anomalo',    optic: 'Anomaly detection watchers (z-score, absence, change)' },
-  { tool: 'Zapier (for data)',        optic: 'Skills — automated workflows triggered on schedule' },
+  { tool: 'Zapier (for data)',        optic: 'Skills: automated workflows triggered on schedule' },
   { tool: 'Retool',                   optic: 'Internal tool builder for any data query' },
   { tool: 'PowerPoint',              optic: 'PPTX export direct from reports and dashboards' },
-  { tool: 'Slack bots (data)',        optic: 'Act mode — /watcher, /brief, /forecast in chat' },
-  { tool: 'Atlan / Alation',          optic: 'Data Marketplace — browse, discover, explore all products' },
-  { tool: 'Informatica MDM',          optic: 'Entity Resolution — canonical names across all products' },
+  { tool: 'Slack bots (data)',        optic: 'Act mode: /watcher, /brief, /forecast in chat' },
+  { tool: 'Atlan / Alation',          optic: 'Data Marketplace: browse, discover, explore all products' },
+  { tool: 'Informatica MDM',          optic: 'Entity Resolution: canonical names across all products' },
 ];
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -215,10 +215,10 @@ export default function IntegriusOpticPage() {
                   Integrius Optic
                 </h1>
                 <p className="text-xl font-semibold text-cyan-400 max-w-4xl mx-auto">
-                  The AI-powered intelligence layer that replaces Tableau, ThoughtSpot, and Power BI Copilot — and runs 100% on your infrastructure.
+                  The AI-powered intelligence layer that replaces Tableau, ThoughtSpot, and Power BI Copilot, running 100% on your infrastructure.
                 </p>
                 <p className="mx-auto max-w-3xl text-white/80 text-lg md:text-xl leading-relaxed">
-                  Ask questions, build dashboards, generate reports, forecast metrics, simulate scenarios, set watchers, automate workflows. All from natural language. All on governed data. All on-premises via Ollama — no data ever leaves your network.
+                  Ask questions, build dashboards, generate reports, forecast metrics, simulate scenarios, set watchers, automate workflows. All from natural language. All on governed data. All on-premises via Ollama. No data ever leaves your network.
                 </p>
               </motion.div>
               <motion.div
@@ -414,7 +414,7 @@ export default function IntegriusOpticPage() {
                     Forecast Watchers: The alert fires before the problem happens.
                   </h3>
                   <p className="text-white/70 text-lg leading-relaxed max-w-4xl">
-                    No other BI tool does this. Threshold watchers fire when a metric crosses a line — by then it&apos;s too late. Optic&apos;s forecast watchers use the same prediction engine that runs on every answer to evaluate whether a threshold <em>will be crossed</em> in the future and alert you while you still have time to act.
+                    No other BI tool does this. Threshold watchers fire when a metric crosses a line, but by then it&apos;s too late. Optic&apos;s forecast watchers use the same prediction engine that runs on every answer to evaluate whether a threshold <em>will be crossed</em> in the future and alert you while you still have time to act.
                   </p>
                   <div className="mt-4 p-4 rounded-lg bg-black/40 border border-cyan-500/30 font-mono text-sm text-cyan-300 max-w-2xl">
                     &ldquo;Predict when churn rate will exceed 5% and alert me 2 weeks in advance.&rdquo;
@@ -436,13 +436,13 @@ export default function IntegriusOpticPage() {
                 <FlaskConical className="w-10 h-10 text-violet-400 flex-shrink-0 mt-1" />
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-2xl font-bold text-white">Simulation — on governed, live data.</h3>
+                    <h3 className="text-2xl font-bold text-white">Simulation on governed, live data.</h3>
                     <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-violet-500/20 border border-violet-500/40 text-violet-300 text-xs font-semibold">
                       <FlaskConical className="w-3 h-3" /> Simulated
                     </span>
                   </div>
                   <p className="text-white/70 text-lg leading-relaxed max-w-4xl">
-                    Every simulation result is tagged with a violet &ldquo;Simulated&rdquo; badge — users can never confuse a scenario with real data. This isn&apos;t a spreadsheet exercise on a stale CSV export. Simulations run on the same live data products that power production dashboards, meaning the inputs are always current and the outputs are trustworthy.
+                    Every simulation result is tagged with a violet &ldquo;Simulated&rdquo; badge, so users can never confuse a scenario with real data. This isn&apos;t a spreadsheet exercise on a stale CSV export. Simulations run on the same live data products that power production dashboards, meaning the inputs are always current and the outputs are trustworthy.
                   </p>
                 </div>
               </div>
@@ -482,7 +482,7 @@ export default function IntegriusOpticPage() {
                 </table>
               </div>
               <p className="mt-8 text-center text-white/60 text-sm max-w-3xl mx-auto">
-                All on-prem, on your data, connected to Core — no SaaS vendor, no data leaving your network, no per-seat pricing that kills the business case.
+                All on-prem, on your data, connected to Core. No SaaS vendor, no data leaving your network, no per-seat pricing that kills the business case.
               </p>
             </FloatingElement>
           </div>
@@ -517,10 +517,10 @@ export default function IntegriusOpticPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                        <span>Step 4: Done — Optic is running</span>
+                        <span>Step 4: Done. Optic is running.</span>
                       </div>
                     </div>
-                    <p className="mt-3 text-white/40 text-xs">Demo mode available — no Core instance required for evaluation.</p>
+                    <p className="mt-3 text-white/40 text-xs">Demo mode available. No Core instance required for evaluation.</p>
                   </div>
                 </div>
               </div>

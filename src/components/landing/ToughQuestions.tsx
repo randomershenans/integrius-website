@@ -6,19 +6,19 @@ import { FloatingElement } from '@/components/landing/FloatingElement';
 const questions = [
   {
     q: '"How do we know this scales? You\'re a small company."',
-    a: 'We tested it. 405 requests across 4 scale levels (2K to 44K records), 100% pass rate, linear degradation. Materialized snapshots serve at 33ms p50. The architecture is stateless — add API pods behind a load balancer and throughput scales horizontally. Kubernetes HPA is built in.',
+    a: 'We tested it. 405 requests across 4 scale levels (2K to 44K records), 100% pass rate, linear degradation. Materialized snapshots serve at 33ms p50. The architecture is stateless: add API pods behind a load balancer and throughput scales horizontally. Kubernetes HPA is built in.',
   },
   {
     q: '"What if you go out of business?"',
-    a: 'You have the platform running inside YOUR infrastructure. No SaaS dependency. No phone-home. No license server. The Docker images, Helm charts, and source code run independently. Your data products, governance rules, and configurations are yours — they live in your Postgres instance.',
+    a: 'You have the platform running inside YOUR infrastructure. No SaaS dependency. No phone-home. No license server. The Docker images, Helm charts, and source code run independently. Your data products, governance rules, and configurations are yours. They live in your Postgres instance.',
   },
   {
     q: '"Our data absolutely cannot leave our network."',
-    a: 'It never does. Zero outbound API calls. No telemetry. No CDN. No external font loading. Air-gapped deployment is documented and tested. Even the AI in Optic runs locally via Ollama — no OpenAI, no Anthropic, no cloud inference. If you unplug the network cable, it still works.',
+    a: 'It never does. Zero outbound API calls. No telemetry. No CDN. No external font loading. Air-gapped deployment is documented and tested. Even the AI in Optic runs locally via Ollama: no OpenAI, no Anthropic, no cloud inference. If you unplug the network cable, it still works.',
   },
   {
     q: '"We already have Collibra / Snowflake / Tableau."',
-    a: "You're spending €750K–2M+ on tools that don't talk to each other. Collibra catalogs but can't serve data. Fivetran moves but doesn't govern. Tableau visualises but needs cloud. Run a pilot alongside your existing stack — we don't ask you to rip and replace. We ask you to compare.",
+    a: "You're spending €750K–2M+ on tools that don't talk to each other. Collibra catalogs but can't serve data. Fivetran moves but doesn't govern. Tableau visualises but needs cloud. Run a pilot alongside your existing stack. We don't ask you to rip and replace. We ask you to compare.",
   },
   {
     q: '"What about SOC 2?"',
@@ -26,7 +26,7 @@ const questions = [
   },
   {
     q: '"Can the AI hallucinate wrong answers?"',
-    a: 'Schema resolution means the LLM only sees real field names from governed data products — it cannot invent columns that don\'t exist. Temperature is set to 0 (deterministic output). Every answer traces back to specific data products with full lineage. If the data is wrong, the lineage tells you exactly which source is responsible.',
+    a: 'Schema resolution means the LLM only sees real field names from governed data products, so it cannot invent columns that don\'t exist. Temperature is set to 0 (deterministic output). Every answer traces back to specific data products with full lineage. If the data is wrong, the lineage tells you exactly which source is responsible.',
   },
   {
     q: '"This seems too good to be true."',
@@ -46,7 +46,7 @@ export function ToughQuestions() {
               Questions every CTO and CISO asks. Answered.
             </h2>
             <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              We&apos;ve heard every objection. Here are honest answers — no marketing copy.
+              We&apos;ve heard every objection. Here are honest answers, no marketing copy.
             </p>
           </div>
 

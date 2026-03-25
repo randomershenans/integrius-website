@@ -45,7 +45,7 @@ export function PerformanceNumbers() {
           {/* Benchmark table */}
           <div className="max-w-2xl mx-auto">
             <h3 className="text-sm font-mono text-white/40 text-center mb-4 uppercase tracking-widest">
-              Benchmark results — live vs. materialized
+              Benchmark results: live vs. materialized
             </h3>
             <div className="overflow-x-auto rounded-xl border border-white/10">
               <table className="w-full text-sm">

@@ -12,24 +12,24 @@ const pharmaTimeline = [
   {
     label: 'Day 1',
     items: [
-      'Deploy Core inside their VPC (air-gapped). Connect all 10 sources via setup wizard — no code, no ETL pipelines.',
+      'Deploy Core inside their VPC (air-gapped). Connect all 10 sources via setup wizard. No code, no ETL pipelines.',
       'Create "Unified Oncology View" data product.',
     ],
   },
   {
     label: 'Day 2',
     items: [
-      'Search: "Find all patients in the BEACON-3 trial" — federated results from trial management AND lab results AND adverse events.',
-      'Optic: "Which clinical trial has the most missing data?" — instant KPI showing BEACON-3 at 23% missing fields.',
-      'Optic: "Which trial sites have the highest dropout rate?" — ranked table + bar chart + narrative.',
+      'Search: "Find all patients in the BEACON-3 trial". Returns federated results from trial management, lab results, and adverse events.',
+      'Optic: "Which clinical trial has the most missing data?" Returns an instant KPI showing BEACON-3 at 23% missing fields.',
+      'Optic: "Which trial sites have the highest dropout rate?" Returns a ranked table, bar chart, and narrative.',
     ],
   },
   {
     label: 'Week 1',
     items: [
       'Permission Explorer: compliance officer verifies marketing team CANNOT see patient PII in 10 seconds instead of a 2-week audit.',
-      'Forecast: "Predict enrollment completion for BEACON-3" — best-case (August) and worst-case (November).',
-      'Simulation: "What if we add 2 more trial sites?" — enrollment completion pulls forward by 6 weeks.',
+      'Forecast: "Predict enrollment completion for BEACON-3". Returns best-case (August) and worst-case (November).',
+      'Simulation: "What if we add 2 more trial sites?" Enrollment completion pulls forward by 6 weeks.',
     ],
   },
 ];
@@ -39,14 +39,14 @@ const bankingTimeline = [
     label: 'Day 1',
     items: [
       'Connect all 8 sources.',
-      'Entity resolution discovers "Acme Holdings Ltd" (CRM), "ACME_HOLDINGS" (trading), "Acme Holdings PLC" (billing), and "acme-holdings" (compliance) are the same entity — automatically.',
+      'Entity resolution discovers "Acme Holdings Ltd" (CRM), "ACME_HOLDINGS" (trading), "Acme Holdings PLC" (billing), and "acme-holdings" (compliance) are the same entity, automatically.',
     ],
   },
   {
     label: 'Day 3',
     items: [
-      'Search: "Acme Holdings" — unified entity card from ALL 8 systems, conflict detection flagging address discrepancy (severity: HIGH).',
-      'Optic: "What\'s our exposure to Acme Holdings?" — aggregated view with KPIs and trend chart.',
+      'Search: "Acme Holdings". Returns a unified entity card from all 8 systems, with conflict detection flagging the address discrepancy (severity: HIGH).',
+      'Optic: "What\'s our exposure to Acme Holdings?" Returns an aggregated view with KPIs and trend chart.',
     ],
   },
   {
@@ -54,7 +54,7 @@ const bankingTimeline = [
     items: [
       'Watchers: Forecast watcher fires 45 minutes before a transaction volume threshold is breached.',
       'Permission Explorer: proves KYC data access controls for MiFID II with timestamped export.',
-      'GDPR: "Right to erasure" — one API call traces all records across all 8 systems via lineage.',
+      'GDPR: "Right to erasure". One API call traces all records across all 8 systems via lineage.',
     ],
   },
 ];
@@ -63,14 +63,14 @@ const techTimeline = [
   {
     label: 'Day 1',
     items: [
-      'Connect everything — 3 Salesforce instances, 2 BigQuery projects, REST API, Kafka topics. 14 sources, 20 minutes.',
+      'Connect everything: 3 Salesforce instances, 2 BigQuery projects, REST API, Kafka topics. 14 sources, 20 minutes.',
       'Create 5 data products: Unified Customer, Revenue Analytics, Product Usage, Support Health, Pipeline Forecast.',
     ],
   },
   {
     label: 'Day 2',
     items: [
-      'Lineage graph — for the first time, VP of Data can see visually how every source connects to every product.',
+      'Lineage graph: for the first time, VP of Data can see visually how every source connects to every product.',
     ],
   },
   {
@@ -161,7 +161,7 @@ export function UseCasesClient() {
                   <FlaskConical className="w-8 h-8 text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-purple-400 mb-1">Scenario 1 — Pharma</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-purple-400 mb-1">Scenario 1: Pharma</p>
                   <h2 className="text-2xl font-bold text-white">10 Oncology Sources, 4 Months, Got Nowhere</h2>
                 </div>
               </div>
@@ -170,7 +170,7 @@ export function UseCasesClient() {
               <div className="mb-8 p-6 rounded-xl bg-red-500/5 border border-red-500/20">
                 <p className="text-xs font-semibold uppercase tracking-wider text-red-400 mb-3">The Problem</p>
                 <p className="text-white/80 text-sm leading-relaxed mb-3">
-                  A top-20 pharma company needs to unify 10 oncology data sources — clinical trial management (Oracle), patient registries (Postgres), lab results (REST API), adverse events (MSSQL), and research publications (S3 CSV exports).
+                  A top-20 pharma company needs to unify 10 oncology data sources: clinical trial management (Oracle), patient registries (Postgres), lab results (REST API), adverse events (MSSQL), and research publications (S3 CSV exports).
                 </p>
                 <p className="text-white/80 text-sm leading-relaxed">
                   They spent 4 months with an internal team and a systems integrator. Result: a stale weekly CSV dump that breaks every time a schema changes.
@@ -204,7 +204,7 @@ export function UseCasesClient() {
                   <Building2 className="w-8 h-8 text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">Scenario 2 — Banking</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">Scenario 2: Banking</p>
                   <h2 className="text-2xl font-bold text-white">8 Systems, 1 Customer, 8 Different Names</h2>
                 </div>
               </div>
@@ -250,7 +250,7 @@ export function UseCasesClient() {
                   <Cpu className="w-8 h-8 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-1">Scenario 3 — Enterprise Tech (Series D SaaS)</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-1">Scenario 3: Enterprise Tech (Series D SaaS)</p>
                   <h2 className="text-2xl font-bold text-white">Data Mesh in Production in 2 Weeks, Not 6 Months</h2>
                 </div>
               </div>
