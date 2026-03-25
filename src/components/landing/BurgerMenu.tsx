@@ -42,6 +42,7 @@ export function BurgerMenu() {
           <Link href="/products/optic" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '16px', textDecoration: 'none' }}>Integrius Optic</Link>
           <Link href="/products/search" onClick={close} style={{ display: 'block', color: 'rgba(255,255,255,0.8)', fontSize: '20px', marginBottom: '32px', textDecoration: 'none' }}>Unified Search API</Link>
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px' }}>
+            <Link href="/use-cases" onClick={close} style={{ display: 'block', color: 'white', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>Use Cases</Link>
             <a href="#how-it-works" onClick={() => scrollTo('#how-it-works')} style={{ display: 'block', color: 'white', fontSize: '24px', fontWeight: 'bold', marginBottom: '20px', textDecoration: 'none' }}>How It Works</a>
             <a href="#pricing" onClick={() => scrollTo('#pricing')} style={{ display: 'block', color: 'white', fontSize: '24px', fontWeight: 'bold', textDecoration: 'none' }}>Pricing</a>
           </div>
