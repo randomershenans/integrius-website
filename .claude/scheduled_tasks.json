@@ -1,0 +1,9 @@
+[
+  {
+    "id": "diablo-poller",
+    "cron": "*/3 * * * *",
+    "recurring": true,
+    "description": "Poll .diablo/ for new audit reports every 3 minutes",
+    "prompt": "Check if any new unprocessed Diablo audit files have landed in C:/Users/ross/Desktop/Projects/integrius-website-new/.diablo/. Look for .md and .json files. If any exist, read gate.json first to get the overall status, then read remediations/README.md, then work through each remediation file (critical first) deploying fix agents per category. After all fixes: npx tsc --noEmit, create branch fix/diablo-{date} from master, commit, push, open and merge a PR. If no .diablo directory exists or it's empty, do nothing."
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "FileChanged": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/diablo-watcher.sh",
+            "asyncRewake": true,
+            "statusMessage": "Diablo audit detected — analysing...",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
