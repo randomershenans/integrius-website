@@ -7,7 +7,7 @@ function buildDatabaseUrl(): string | undefined {
   if (!url) return undefined;
   if (url.includes('connection_limit')) return url;
   const sep = url.includes('?') ? '&' : '?';
-  return `${url}${sep}connection_limit=1`;
+  return `${url}${sep}connection_limit=5`;
 }
 
 export const prisma =

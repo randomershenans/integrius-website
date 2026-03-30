@@ -10,7 +10,7 @@ export function SiteFooter() {
           <Link href="/" className="text-xs hover:underline underline-offset-4 text-white/60 hover:text-white/80">Home</Link>
           <Link href="/blog" className="text-xs hover:underline underline-offset-4 text-white/60 hover:text-white/80">Blog</Link>
           <Link href="/contact" className="text-xs hover:underline underline-offset-4 text-white/60 hover:text-white/80">Contact</Link>
-          <a href="#" className="text-xs hover:underline underline-offset-4 text-white/60 hover:text-white/80">Privacy</a>
+          <span className="text-xs text-white/60">Privacy</span>
         </nav>
       </div>
     </footer>

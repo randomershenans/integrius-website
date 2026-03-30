@@ -1,0 +1,11 @@
+# Default owner for everything
+* @randomershenans
+
+# Critical paths require explicit review
+src/lib/auth.ts @randomershenans
+src/lib/supabase-admin.ts @randomershenans
+src/app/api/portal/admin/** @randomershenans
+src/app/api/admin/** @randomershenans
+prisma/ @randomershenans
+supabase/ @randomershenans
+.claude/ @randomershenans
