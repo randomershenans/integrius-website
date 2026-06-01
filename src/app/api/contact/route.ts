@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { auditLog } from '@/lib/audit-logger';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Instantiate the Resend client lazily (at request time, not at module load).
+// The Resend constructor throws when RESEND_API_KEY is missing, and doing that
+// at module scope fails build-time page-data collection on environments without
+// the secret (e.g. Netlify deploy previews, which do not receive production
+// secrets). At request time a missing key still fails closed: getResend()
+// throws and the handler's try/catch returns a 500 without sending anything.
+let resendClient: Resend | null = null;
+function getResend(): Resend {
+  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 
 // --- Rate limiting (in-memory, per-instance) ---
 const rateLimit = new Map<string, { count: number; resetAt: number }>();
@@ -105,7 +115,7 @@ export async function POST(req: NextRequest) {
     const safeCompany = escapeHtml(company ? String(company).trim() : '');
     const safeMessage = escapeHtml(String(message).trim()).replace(/\n/g, '<br>');
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'Integrius Contact Form <contact@notifications.integri.us>',
       to: [CONTACT_RECIPIENT],
       replyTo: email,

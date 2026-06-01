@@ -1,9 +1,21 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-const jwtSecret = process.env.CMS_JWT_SECRET;
-if (!jwtSecret) throw new Error('CMS_JWT_SECRET environment variable is not set');
-const secret = new TextEncoder().encode(jwtSecret);
+// Read the secret lazily — NOT at module load. Next.js imports this module
+// during build-time page-data collection (with no request in flight), so a
+// top-level throw here fails the whole build whenever CMS_JWT_SECRET is absent
+// (e.g. Netlify deploy previews, which do not receive production secrets).
+// Deferring the read keeps the build resilient while preserving the runtime
+// guarantee: the first admin request that actually needs the secret still
+// fails closed if it is missing (see signAdminToken / verifyAdminToken).
+let secretCache: Uint8Array | null = null;
+function getSecret(): Uint8Array {
+  if (secretCache) return secretCache;
+  const jwtSecret = process.env.CMS_JWT_SECRET;
+  if (!jwtSecret) throw new Error('CMS_JWT_SECRET environment variable is not set');
+  secretCache = new TextEncoder().encode(jwtSecret);
+  return secretCache;
+}
 
 const COOKIE = 'cms_admin_token';
 const TTL_HOURS = 12;
@@ -18,12 +30,12 @@ export async function signAdminToken(payload: AdminSession): Promise<string> {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${TTL_HOURS}h`)
-    .sign(secret);
+    .sign(getSecret());
 }
 
 export async function verifyAdminToken(token: string): Promise<AdminSession | null> {
   try {
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, getSecret());
     return payload as unknown as AdminSession;
   } catch {
     return null;

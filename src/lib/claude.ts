@@ -4,23 +4,31 @@ import { CircuitBreaker } from './circuit-breaker';
 // NOTE: Rate limiting (e.g. per-user or per-minute caps) should be applied
 // at the API route level, not inside this library module.
 
-const apiKey = process.env.ANTHROPIC_API_KEY;
-if (!apiKey) {
-  throw new Error(
-    'ANTHROPIC_API_KEY is not set. Add it to your environment variables.'
-  );
-}
-
-let client: Anthropic;
-try {
-  client = new Anthropic({ apiKey });
-} catch (err) {
-  const masked = apiKey.length > 4 ? `...${apiKey.slice(-4)}` : '****';
-  console.error(
-    `Failed to initialise Anthropic client (key ending ${masked}):`,
-    err
-  );
-  throw err;
+// Create the Anthropic client lazily (on first use) rather than at module load,
+// so build-time page-data collection does not throw when ANTHROPIC_API_KEY is
+// absent (e.g. Netlify deploy previews, which do not receive production
+// secrets). A real generation request still fails closed: getClient() throws if
+// the key is missing, and the calling route returns a 500.
+let client: Anthropic | null = null;
+function getClient(): Anthropic {
+  if (client) return client;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error(
+      'ANTHROPIC_API_KEY is not set. Add it to your environment variables.'
+    );
+  }
+  try {
+    client = new Anthropic({ apiKey });
+  } catch (err) {
+    const masked = apiKey.length > 4 ? `...${apiKey.slice(-4)}` : '****';
+    console.error(
+      `Failed to initialise Anthropic client (key ending ${masked}):`,
+      err
+    );
+    throw err;
+  }
+  return client;
 }
 
 const MODEL = 'claude-sonnet-4-20250514';
@@ -122,7 +130,7 @@ export async function generateArticle(spec: ArticleSpec): Promise<GeneratedArtic
 
   const response = await claudeBreaker.execute(() =>
     withTimeout(
-      client.messages.create({
+      getClient().messages.create({
         model: MODEL,
         max_tokens: 4096,
         messages: [{ role: 'user', content: prompt }],
@@ -142,7 +150,7 @@ export async function generateArticle(spec: ArticleSpec): Promise<GeneratedArtic
   // Generate excerpt
   const excerptResponse = await claudeBreaker.execute(() =>
     withTimeout(
-      client.messages.create({
+      getClient().messages.create({
         model: MODEL,
         max_tokens: 100,
         messages: [{ role: 'user', content: buildExcerptPrompt(spec.title, cleaned) }],
