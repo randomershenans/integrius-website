@@ -12,6 +12,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx --env-file .env prisma/seed.ts",
     "db:seed-v2": "tsx --env-file .env prisma/seed-v2-comparison-specs.ts",
+    "db:seed-articles": "tsx --env-file .env prisma/seed-articles.ts",
     "db:studio": "prisma studio --port 5556"
   },
   "dependencies": {
