@@ -17,7 +17,7 @@ const sdkCards = [
     description: 'For TypeScript/JavaScript applications, internal tools, and automation',
     bullets: [
       'Full type-safe API with generated TypeScript types',
-      'Event stream access: subscribe to 34 event types',
+      'Event stream access: subscribe to 34+ event types',
       'Data product queries with pagination, filtering, and projection',
     ],
     accent: 'text-red-400',
@@ -27,13 +27,13 @@ const sdkCards = [
   {
     icon: Code,
     name: 'Python',
-    install: 'pip install integrius',
+    install: 'pip install integrius (v1.2.0)',
     installLink: null,
-    description: 'For data engineering teams, ML pipelines, and notebooks',
+    description: 'For data engineering teams, ML pipelines, regulated-industry automation, and notebooks',
     bullets: [
       'Pandas-friendly output, returns DataFrames directly',
-      'Jupyter notebook integration',
-      '"The data engineering team writes a script that pulls from the Revenue Analytics data product, joins with internal metrics, and feeds their ML pipeline. 15 lines of code."',
+      'v1.2.0: audit_logs, governance (21 CFR Part 11 sign), gdpr, sessions, webhooks resource modules',
+      '"The data engineering team pulls from a Revenue Analytics product, joins with internal metrics, feeds the ML pipeline. 15 lines of Python."',
     ],
     accent: 'text-blue-400',
     border: 'border-blue-500/20',
@@ -42,13 +42,13 @@ const sdkCards = [
   {
     icon: Terminal,
     name: 'CLI',
-    install: 'integrius products list --format json',
+    install: 'integrius audit verify',
     installLink: null,
-    description: 'Infrastructure-as-code teams manage data products via CLI + API',
+    description: 'Infrastructure-as-code teams manage data products and prove integrity via CLI',
     bullets: [
-      '25+ commands covering products, sources, events, and lineage',
+      '40+ commands covering products, sources, events, lineage, audit, governance, GDPR, sessions, webhooks',
+      'audit verify walks the entire HMAC chain. Exit code 2 if tamper detected. Regulator-defensible.',
       'Zero external dependencies. Node.js built-ins only.',
-      'JSON and table output modes for scripting and humans',
     ],
     accent: 'text-emerald-400',
     border: 'border-emerald-500/20',
@@ -127,12 +127,12 @@ export default function IntegriusSDKPage() {
             <div className="flex flex-col items-center space-y-8 text-center max-w-4xl mx-auto">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium mb-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Now live on npm
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Python v1.2.0 · npm live · CLI live
                 </div>
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white">Integrius SDK</h1>
                 <p className="text-2xl font-semibold text-[#00B8D4]">npm package. Python library. CLI. Three ways to build on your governed data platform.</p>
                 <p className="mx-auto max-w-[700px] text-white/80 text-lg md:text-xl">
-                  Developer tools for building on top of Integrius. Pull governed data products into your applications, pipelines, and automation, without writing integration plumbing.
+                  Developer tools for building on top of Integrius. Pull governed data products into your applications, pipelines, and automation. Now includes audit-chain verification, 21 CFR Part 11 e-signatures, GDPR erasure, session management, and webhook subscriptions, all from code.
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex items-center gap-4">

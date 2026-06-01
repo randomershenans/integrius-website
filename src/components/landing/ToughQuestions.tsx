@@ -21,8 +21,12 @@ const questions = [
     a: "You're spending €750K–2M+ on tools that don't talk to each other. Collibra catalogs but can't serve data. Fivetran moves but doesn't govern. Tableau visualises but needs cloud. Run a pilot alongside your existing stack. We don't ask you to rip and replace. We ask you to compare.",
   },
   {
-    q: '"What about SOC 2?"',
-    a: '40 controls mapped, 15 fully implemented, audit-ready evidence for all of them. 73-question security questionnaire pre-filled with file references. We\'ll hand your security team a completed document before the first meeting ends.',
+    q: '"What about SOC 2, HIPAA, 21 CFR Part 11, FISMA?"',
+    a: '18 standards mapped to specific platform capabilities. SOC 2 (40 controls mapped, 15 fully implemented, audit-ready). HIPAA BAA-ready posture. 21 CFR Part 11 e-signatures with re-authentication, reason, and chained HMAC or Ed25519 signature. FISMA / NIST 800-53 control families mapped (AC, AU, IA, SC, SI). GDPR atomic erasure. ALCOA+ data integrity across all nine attributes. 73-question security questionnaire pre-filled with file references. We hand your security team a completed document before the first meeting ends.',
+  },
+  {
+    q: '"Can you actually prove the audit log hasn\'t been tampered with?"',
+    a: 'Yes. Every audit row is HMAC-chained to the previous row. The append-only DB trigger blocks updates and deletes. Per-org pg_advisory_xact_lock prevents concurrent corruption. A regulator can run `audit verify` from the CLI and walk the entire chain end-to-end. If anyone tampered, the verify command exits with code 2 and tells you exactly which row broke. This is ALCOA+ "Original" and "Enduring" enforced by the platform, not promised by policy.',
   },
   {
     q: '"Can the AI hallucinate wrong answers?"',

@@ -11,7 +11,7 @@ const rows = [
     tool: 'Fivetran / Airbyte',
     category: 'ETL/ELT',
     cost: '€100–300K',
-    replacement: 'Core: 13 connectors + transform pipeline + materialization',
+    replacement: 'Core: 16 connectors + streaming transform pipeline + materialization',
   },
   {
     tool: 'Elasticsearch',
@@ -47,7 +47,7 @@ const rows = [
     tool: 'Security questionnaire completion',
     category: 'compliance overhead',
     cost: 'Weeks of back-and-forth',
-    replacement: '73-question questionnaire pre-filled, SOC 2 controls mapped',
+    replacement: '73-question questionnaire pre-filled. 18 standards mapped (SOC 2, HIPAA, GDPR, 21 CFR Part 11, FISMA/NIST, ALCOA+).',
   },
 ];
 
