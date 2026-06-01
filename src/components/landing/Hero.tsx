@@ -28,9 +28,7 @@ export function Hero() {
               </span>
             </h1>
             <p className="mx-auto max-w-3xl text-white/70 text-lg md:text-xl leading-relaxed">
-              The self-hosted platform that replaces your data catalog, ETL pipelines, enterprise
-              search, BI tools, and product analytics. Governed data products, event-driven
-              intelligence, AI-powered analytics, and zero data leakage.
+              Self-hosted platform for regulated industries. Replaces your data catalog, ETL pipelines, enterprise search, BI tools, and product analytics. Governed data products, event-driven intelligence, AI-powered analytics, tamper-evident audit, and zero data leakage. Built for pharma, finance, healthcare, government, and defence.
             </p>
           </motion.div>
 

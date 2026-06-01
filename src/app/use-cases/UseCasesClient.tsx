@@ -54,7 +54,7 @@ const bankingTimeline = [
     items: [
       'Watchers: Forecast watcher fires 45 minutes before a transaction volume threshold is breached.',
       'Permission Explorer: proves KYC data access controls for MiFID II with timestamped export.',
-      'GDPR: "Right to erasure". One API call traces all records across all 8 systems via lineage.',
+      'GDPR: "Right to erasure". One atomic transaction deletes + anonymises across the connected systems and writes a chained audit row (POST /api/gdpr/erasure).',
     ],
   },
 ];
@@ -132,9 +132,9 @@ export function UseCasesClient() {
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white">
                   Industry Scenarios
                 </h1>
-                <p className="text-2xl font-semibold text-[#00B8D4]">Real problems. Real industries. Real results.</p>
+                <p className="text-2xl font-semibold text-[#00B8D4]">Built for any industry with enough data to govern.</p>
                 <p className="mx-auto max-w-[700px] text-white/70 text-lg md:text-xl">
-                  These are not hypotheticals. They are the exact challenges we were built to solve.
+                  Pharma, biotech, finance, healthcare, government, defence, education, manufacturing, energy, telecoms, insurance. Anywhere regulated, federated, or audit-driven. Three deep scenarios below. The platform applies the same way to every one.
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex gap-4 flex-wrap justify-center">
@@ -149,6 +149,46 @@ export function UseCasesClient() {
                 </a>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* Industries strip */}
+        <section className="py-16 relative">
+          <div className="w-full px-4 md:px-8">
+            <FloatingElement className="p-8 bg-black/40 backdrop-blur-lg rounded-xl border border-white/10" delay={0.15}>
+              <div className="text-center mb-8">
+                <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-2">Industry coverage</p>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tighter text-white">
+                  11 regulated industries. One platform. Same answer.
+                </h2>
+                <p className="text-white/60 text-base max-w-3xl mx-auto mt-3">
+                  The pharma audit chain is the same chain banks use for SOX 404. The HIPAA BAA posture is the same posture FERPA needs for education. Federated, governed, tamper-evident, self-hosted. The deep scenarios below show the platform working in three of them. The capability table on the right shows which platform features make each industry possible.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-w-5xl mx-auto">
+                {[
+                  { name: 'Pharma & Biotech', key: '21 CFR Part 11, ALCOA+, GxP audit chain' },
+                  { name: 'Finance', key: 'SOX 404, MiFID II, tamper-evident audit' },
+                  { name: 'Healthcare', key: 'HIPAA BAA, ePHI access logging' },
+                  { name: 'Government', key: 'FISMA, NIST 800-53, FedRAMP-compatible' },
+                  { name: 'Defence', key: 'ITAR, EAR, CMMC, air-gapped deploy' },
+                  { name: 'Education', key: 'FERPA, student-record access controls' },
+                  { name: 'Manufacturing', key: 'Federated supply-chain data products' },
+                  { name: 'Energy', key: 'NERC CIP, grid-data isolation' },
+                  { name: 'Telecoms', key: 'Subscriber-data RBAC, retention windows' },
+                  { name: 'Insurance', key: 'Claims-data audit + permission proof' },
+                  { name: 'Enterprise Tech', key: 'Series D+ data mesh in production' },
+                ].map((industry) => (
+                  <div key={industry.name} className="p-4 rounded-lg bg-white/5 border border-white/10 hover:border-cyan-500/30 transition-colors">
+                    <p className="text-sm font-semibold text-white mb-1">{industry.name}</p>
+                    <p className="text-xs text-white/50">{industry.key}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-xs text-white/40 mt-6">
+                Three deep scenarios below. The platform applies the same way to every industry above.
+              </p>
+            </FloatingElement>
           </div>
         </section>
 

@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
     .select('*')
     .order('created_at', { ascending: false })
 
-  if (orgsError) return NextResponse.json({ error: orgsError.message }, { status: 500 })
+  if (orgsError) {
+    console.error('Failed to fetch organizations:', orgsError.message)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 
   // Fetch active licenses for all orgs to compute activeLicenseCount and mrrContribution
   const orgIds = (orgs ?? []).map((o: { id: string }) => o.id)
@@ -25,7 +28,10 @@ export async function GET(req: NextRequest) {
       .eq('status', 'ACTIVE')
       .in('org_id', orgIds)
 
-    if (licError) return NextResponse.json({ error: licError.message }, { status: 500 })
+    if (licError) {
+      console.error('Failed to fetch licenses:', licError.message)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
     activeLicenses = licData ?? []
   }
 
@@ -92,7 +98,8 @@ export async function POST(req: NextRequest) {
     if (error.code === '23505') {
       return NextResponse.json({ error: 'An organisation with that slug or email already exists' }, { status: 409 })
     }
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Failed to create organization:', error.message)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 
   return NextResponse.json(org, { status: 201 })

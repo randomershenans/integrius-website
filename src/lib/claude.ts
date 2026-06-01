@@ -1,8 +1,33 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { CircuitBreaker } from './circuit-breaker';
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// NOTE: Rate limiting (e.g. per-user or per-minute caps) should be applied
+// at the API route level, not inside this library module.
+
+const apiKey = process.env.ANTHROPIC_API_KEY;
+if (!apiKey) {
+  throw new Error(
+    'ANTHROPIC_API_KEY is not set. Add it to your environment variables.'
+  );
+}
+
+let client: Anthropic;
+try {
+  client = new Anthropic({ apiKey });
+} catch (err) {
+  const masked = apiKey.length > 4 ? `...${apiKey.slice(-4)}` : '****';
+  console.error(
+    `Failed to initialise Anthropic client (key ending ${masked}):`,
+    err
+  );
+  throw err;
+}
 
 const MODEL = 'claude-sonnet-4-20250514';
+
+const API_TIMEOUT_MS = 30_000;
+
+const claudeBreaker = new CircuitBreaker('Claude API');
 
 export interface ArticleSpec {
   title: string;
@@ -79,14 +104,32 @@ ${content.slice(0, 1500)}
 Return ONLY the excerpt text. No quotes. No preamble.`;
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error(`API call timed out after ${ms}ms`)),
+      ms,
+    );
+    promise.then(
+      (val) => { clearTimeout(timer); resolve(val); },
+      (err) => { clearTimeout(timer); reject(err); },
+    );
+  });
+}
+
 export async function generateArticle(spec: ArticleSpec): Promise<GeneratedArticle> {
   const prompt = buildPrompt(spec);
 
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: 4096,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  const response = await claudeBreaker.execute(() =>
+    withTimeout(
+      client.messages.create({
+        model: MODEL,
+        max_tokens: 4096,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+      API_TIMEOUT_MS,
+    ),
+  );
 
   const content = response.content
     .filter(b => b.type === 'text')
@@ -97,11 +140,16 @@ export async function generateArticle(spec: ArticleSpec): Promise<GeneratedArtic
   const cleaned = content.replace(/\u2014/g, ',').replace(/--/g, ',');
 
   // Generate excerpt
-  const excerptResponse = await client.messages.create({
-    model: MODEL,
-    max_tokens: 100,
-    messages: [{ role: 'user', content: buildExcerptPrompt(spec.title, cleaned) }],
-  });
+  const excerptResponse = await claudeBreaker.execute(() =>
+    withTimeout(
+      client.messages.create({
+        model: MODEL,
+        max_tokens: 100,
+        messages: [{ role: 'user', content: buildExcerptPrompt(spec.title, cleaned) }],
+      }),
+      API_TIMEOUT_MS,
+    ),
+  );
 
   const excerpt = excerptResponse.content
     .filter(b => b.type === 'text')

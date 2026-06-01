@@ -5,7 +5,7 @@ import { FloatingElement } from '@/components/landing/FloatingElement';
 const controls = [
   {
     label: 'Deployment',
-    detail: 'Self-hosted only. Air-gapped supported. Zero outbound calls.',
+    detail: 'Self-hosted only. Air-gapped supported. Zero outbound calls. No SaaS sub-processors.',
   },
   {
     label: 'Encryption at rest',
@@ -28,20 +28,40 @@ const controls = [
     detail: 'TOTP (RFC 6238), encrypted secret storage',
   },
   {
-    label: 'Audit logs',
-    detail: 'Every action logged: user, resource, status, IP, user agent, timestamp',
+    label: 'Concurrent sessions',
+    detail: 'Per-user cap with oldest-session eviction. Active session list + targeted revoke.',
+  },
+  {
+    label: 'Tamper-evident audit log',
+    detail: 'HMAC-chained append-only audit. Append-only DB trigger. Per-org advisory lock. Walkable proof for regulators.',
+  },
+  {
+    label: '21 CFR Part 11 e-signatures',
+    detail: 'Re-authentication + reason + HMAC or Ed25519 signature, chained into the audit log. Bulk-sign behind a separate authority gate.',
+  },
+  {
+    label: 'ALCOA+ data integrity',
+    detail: 'Attributable, Legible, Contemporaneous, Original, Accurate plus Complete, Consistent, Enduring, Available. All nine attributes enforced.',
   },
   {
     label: 'SIEM export',
-    detail: 'JSON/CSV to Splunk, Datadog, ELK, Sumo Logic',
+    detail: 'JSON/CSV to Splunk, Datadog, ELK, Sumo Logic. Webhook subscriptions for live event streaming.',
   },
   {
     label: 'GDPR',
-    detail: 'Subject access via federated search, erasure via lineage-guided source deletion',
+    detail: 'Atomic erasure in one transaction: delete + anonymise + chained audit row. Article 15 subject-access endpoint included.',
+  },
+  {
+    label: 'HIPAA',
+    detail: 'BAA-ready posture. ePHI access logged, encrypted at rest, controlled by RBAC + permissions. Audit trail covers required disclosures.',
+  },
+  {
+    label: 'FISMA / NIST 800-53',
+    detail: 'Control families mapped (AC, AU, IA, SC, SI). Audit-ready evidence. FedRAMP-compatible deployment posture.',
   },
   {
     label: 'SOC 2',
-    detail: '40 controls mapped, 15 fully in place, audit-ready',
+    detail: '40 controls mapped, 15 fully in place, audit-ready evidence',
   },
   {
     label: 'Rate limiting',
@@ -49,7 +69,7 @@ const controls = [
   },
   {
     label: 'SSRF protection',
-    detail: 'Blocks private IPs, loopback, link-local, cloud metadata endpoints',
+    detail: 'Blocks private IPs, loopback, link-local, cloud metadata endpoints. Enforced on connectors and webhook deliveries.',
   },
 ];
 
@@ -68,7 +88,7 @@ export function SecuritySection() {
             </h2>
           </div>
           <p className="text-white/60 text-lg max-w-2xl mx-auto text-center mb-12">
-            Your CISO will have a filled-in questionnaire before the pilot starts. Your security team doesn&apos;t start from zero.
+            18 regulated-industry standards mapped to specific platform capabilities. SOC 2, HIPAA, GDPR, 21 CFR Part 11, FISMA / NIST 800-53, ALCOA+ and more. Your security team doesn&apos;t start from zero.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
@@ -87,8 +107,8 @@ export function SecuritySection() {
 
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 text-center">
             <div className="px-6 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-emerald-400/70 font-mono mb-0.5">SOC 2 Controls</p>
-              <p className="text-2xl font-bold text-emerald-400">40 mapped · 15 live</p>
+              <p className="text-xs text-emerald-400/70 font-mono mb-0.5">Compliance standards</p>
+              <p className="text-2xl font-bold text-emerald-400">18 mapped</p>
             </div>
             <div className="px-6 py-3 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
               <p className="text-xs text-cyan-400/70 font-mono mb-0.5">Security questionnaire</p>

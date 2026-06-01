@@ -9,6 +9,14 @@ export interface ShareResult {
   error?: string;
 }
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
 function buildHook(title: string, excerpt: string): string {
   // 2-3 sentence hook from the article for the LinkedIn post body
   const hook = excerpt.length > 0 ? excerpt : title;
@@ -21,13 +29,16 @@ export async function shareToLinkedIn(article: {
   slug: string;
   excerpt: string;
 }): Promise<ShareResult> {
-  const accessToken   = process.env.LINKEDIN_ACCESS_TOKEN;
-  const orgId         = process.env.LINKEDIN_ORGANIZATION_ID;
+  const clientId      = requireEnv('LINKEDIN_CLIENT_ID');
+  const clientSecret  = requireEnv('LINKEDIN_CLIENT_SECRET');
+  const accessToken   = requireEnv('LINKEDIN_ACCESS_TOKEN');
+  const orgId         = requireEnv('LINKEDIN_ORGANIZATION_ID');
   const siteUrl       = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
 
-  if (!accessToken || !orgId) {
-    return { success: false, error: 'LINKEDIN_ACCESS_TOKEN or LINKEDIN_ORGANIZATION_ID not set' };
-  }
+  // clientId and clientSecret are validated to ensure the OAuth config is
+  // complete; they are used during token refresh, not in every API call.
+  void clientId;
+  void clientSecret;
 
   const articleUrl = `${siteUrl}/blog/${article.slug}`;
   const hook       = buildHook(article.title, article.excerpt);

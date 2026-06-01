@@ -4,26 +4,51 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
+const MAX_ATTEMPTS = 5
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
+
 export default function PortalLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [failedAttempts, setFailedAttempts] = useState(0)
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null)
+
+  const isLockedOut = lockoutUntil !== null && Date.now() < lockoutUntil
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (isLockedOut) {
+      setError('Too many attempts. Please try again in 15 minutes.')
+      return
+    }
+
     setLoading(true)
     setError('')
 
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    setPassword('')
 
     if (authError) {
-      setError(authError.message)
+      const newAttempts = failedAttempts + 1
+      setFailedAttempts(newAttempts)
+
+      if (newAttempts >= MAX_ATTEMPTS) {
+        setLockoutUntil(Date.now() + LOCKOUT_DURATION_MS)
+        setError('Too many attempts. Please try again in 15 minutes.')
+      } else {
+        setError('Invalid email or password')
+      }
+
       setLoading(false)
       return
     }
 
+    setFailedAttempts(0)
+    setLockoutUntil(null)
     router.replace('/portal/dashboard')
   }
 
@@ -63,7 +88,7 @@ export default function PortalLoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || isLockedOut}
             className="w-full bg-gradient-to-r from-[#00B8D4] to-[#0091EA] hover:from-[#0091EA] hover:to-[#0288D1] text-white py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-all flex items-center justify-center gap-2"
           >
             {loading ? (

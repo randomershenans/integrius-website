@@ -10,18 +10,21 @@ import { SiteFooter } from '@/components/landing/SiteFooter';
 
 const connectors = [
   { name: 'REST API', type: 'API', useCase: 'Any HTTP endpoint with auth, pagination, path extraction' },
+  { name: 'GraphQL', type: 'API', useCase: 'Any GraphQL endpoint with variables' },
   { name: 'PostgreSQL', type: 'Database', useCase: 'Postgres 12+ with SSL, custom queries' },
   { name: 'MySQL', type: 'Database', useCase: 'MySQL 5.7+ / MariaDB 10.3+' },
   { name: 'SQL Server', type: 'Database', useCase: 'MSSQL 2016+ with encryption' },
-  { name: 'Snowflake', type: 'Warehouse', useCase: 'Full warehouse access with role assumption' },
   { name: 'MongoDB', type: 'NoSQL', useCase: 'MongoDB 4.4+ including Atlas' },
-  { name: 'GraphQL', type: 'API', useCase: 'Any GraphQL endpoint with variables' },
+  { name: 'Snowflake', type: 'Warehouse', useCase: 'Full warehouse access with role assumption' },
+  { name: 'BigQuery', type: 'Warehouse', useCase: 'Google BigQuery with service account auth' },
+  { name: 'Redshift', type: 'Warehouse', useCase: 'AWS Redshift with IAM auth' },
+  { name: 'Amazon S3', type: 'Cloud Storage', useCase: 'CSV, JSON, Parquet from S3 buckets (LFI-sandboxed)' },
+  { name: 'Salesforce', type: 'SaaS', useCase: 'Standard and custom objects via SOQL' },
+  { name: 'Kafka', type: 'Streaming', useCase: 'Topics with SASL auth and Schema Registry' },
   { name: 'CSV', type: 'File', useCase: 'Upload with delimiter/encoding options' },
   { name: 'Excel', type: 'File', useCase: '.xlsx/.xls with sheet and range selection' },
-  { name: 'Amazon S3', type: 'Cloud Storage', useCase: 'CSV, JSON, Parquet from S3 buckets' },
-  { name: 'Salesforce', type: 'SaaS', useCase: 'Standard and custom objects via SOQL' },
-  { name: 'BigQuery', type: 'Warehouse', useCase: 'Google BigQuery with service account auth' },
-  { name: 'Kafka', type: 'Streaming', useCase: 'Topics with SASL auth and Schema Registry' },
+  { name: 'JSON', type: 'File', useCase: 'Newline-delimited or array, streaming parse' },
+  { name: 'Event log', type: 'Streaming', useCase: 'Replay the platform event stream as a source' },
 ];
 
 const typeColors: Record<string, string> = {
@@ -151,10 +154,10 @@ export default function IntegriusCorePage() {
           <div className="w-full px-4 md:px-8">
             <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
               <h2 className="text-3xl font-bold tracking-tighter text-center mb-4 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
-                13 Connectors, All Included at Every Tier
+                16 Connectors, All Included at Every Tier
               </h2>
               <p className="text-lg text-center mb-12 max-w-3xl mx-auto text-white/80">
-                No connector marketplace. No add-on fees. Every connector ships with every plan.
+                No connector marketplace. No add-on fees. Every connector ships with every plan. Streaming connector → transform → materialize → serve pipeline for memory-safe processing of large sources.
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -203,7 +206,7 @@ export default function IntegriusCorePage() {
                 </h2>
               </div>
               <p className="text-lg text-center mb-4 max-w-3xl mx-auto text-white/80">
-                34 event types across 13 categories. Every state change emits an event.
+                34+ event types across 13 categories. Every state change emits an event. In-process eventBus + cross-replica eventBridge (Redis pub/sub with UUID schema validation, size cap, echo-skip) + bounded eventHistoryQueue + 8 named subscribers.
               </p>
               <p className="text-center mb-12 max-w-3xl mx-auto text-white/60 italic">
                 This is not a logging system bolted on after the fact. It is the architecture.
@@ -220,6 +223,54 @@ export default function IntegriusCorePage() {
                     <p className="text-white/70 text-sm">{item.body}</p>
                   </motion.div>
                 ))}
+              </div>
+            </FloatingElement>
+          </div>
+        </section>
+
+        {/* Tamper-evident audit + governance */}
+        <section className="py-24 relative">
+          <div className="w-full px-4 md:px-8">
+            <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Shield className="w-8 h-8 text-cyan-400" />
+                <h2 className="text-3xl font-bold tracking-tighter bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
+                  Tamper-evident audit. Regulator-defensible by design.
+                </h2>
+              </div>
+              <p className="text-lg text-center mb-8 max-w-3xl mx-auto text-white/80">
+                Every action is logged into an HMAC-chained append-only audit log. The append-only DB trigger blocks updates and deletes. A per-org pg_advisory_xact_lock prevents concurrent corruption. A regulator can walk the chain end-to-end. If anyone tampered, the verify step exits with a non-zero code and tells you which row broke.
+              </p>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">21 CFR Part 11 e-signatures</p>
+                  <p className="text-white/70 text-sm">Re-authentication + reason + HMAC or Ed25519 signature, chained into the audit row. Bulk-sign behind a separate authority gate. Pluggable Ed25519 provider for HSM-backed deployments.</p>
+                </div>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">ALCOA+ data integrity</p>
+                  <p className="text-white/70 text-sm">Attributable, Legible, Contemporaneous, Original, Accurate, Complete, Consistent, Enduring, Available. All nine attributes enforced by the platform.</p>
+                </div>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">GDPR atomic erasure</p>
+                  <p className="text-white/70 text-sm">One transaction: delete the subject, anonymise residual references, write a chained audit row. <code className="text-cyan-300 font-mono text-xs">POST /api/gdpr/erasure</code> + Article 15 subject access.</p>
+                </div>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">Retention checkpoint + re-anchor</p>
+                  <p className="text-white/70 text-sm">When old rows are pruned for retention, a checkpoint preserves the chain. The verifier re-anchors at the checkpoint. The proof survives retention.</p>
+                </div>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">SIEM + webhooks</p>
+                  <p className="text-white/70 text-sm">JSON / CSV export to Splunk, Datadog, ELK, Sumo Logic. Webhook subscriptions for live event streaming. <code className="text-cyan-300 font-mono text-xs">POST /api/webhooks</code>.</p>
+                </div>
+                <div className="p-5 rounded-xl bg-white/5 border border-white/10">
+                  <p className="font-semibold text-cyan-400 mb-2">Session controls</p>
+                  <p className="text-white/70 text-sm">Per-user concurrent-session cap with oldest-session eviction. List active sessions, revoke individually, or revoke-all-others after credential rotation.</p>
+                </div>
+              </div>
+              <div className="p-5 rounded-xl bg-cyan-500/5 border border-cyan-500/20 max-w-3xl mx-auto text-center">
+                <p className="text-white/80 text-sm">
+                  <span className="text-cyan-400 font-semibold">18 regulated-industry standards mapped:</span> SOC 2, HIPAA, GDPR, 21 CFR Part 11, ALCOA+, FISMA / NIST 800-53, FedRAMP-compatible, SOX 404, MiFID II, FERPA, ITAR / EAR / CMMC, NERC CIP and more.
+                </p>
               </div>
             </FloatingElement>
           </div>
