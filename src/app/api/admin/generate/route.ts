@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/api-auth';
 import { generateArticle } from '@/lib/claude';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const session = await requireAdmin(req);
   if (session instanceof NextResponse) return session;

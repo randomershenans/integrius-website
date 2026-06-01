@@ -4,6 +4,8 @@ import prisma from '@/lib/prisma';
 import { signAdminToken, setAdminCookie } from '@/lib/auth';
 import { auditLog } from '@/lib/audit-logger';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json() as { email: string; password: string };
   const ip =
