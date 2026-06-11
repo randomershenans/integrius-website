@@ -45,6 +45,20 @@ const PUBLISH_ORDER: { slug: string; daysAgo: number }[] = [
   { slug: 'pharma-data-integration-alcoa', daysAgo: 4 },
   { slug: 'integrius-vs-fivetran', daysAgo: 2 },
   { slug: 'build-customer-360-data-product', daysAgo: 0 },
+  // Wave 13: vs + alternatives set. daysAgo is relative to whenever the seed
+  // runs, so the set reads as a steady two-week publishing rhythm.
+  { slug: 'integrius-vs-collibra', daysAgo: 15 },
+  { slug: 'collibra-alternatives', daysAgo: 13 },
+  { slug: 'integrius-vs-mulesoft', daysAgo: 12 },
+  { slug: 'mulesoft-alternatives', daysAgo: 10 },
+  { slug: 'integrius-vs-informatica', daysAgo: 9 },
+  { slug: 'informatica-alternatives', daysAgo: 8 },
+  { slug: 'integrius-vs-airbyte', daysAgo: 6 },
+  { slug: 'fivetran-alternatives', daysAgo: 5 },
+  { slug: 'integrius-vs-dbt', daysAgo: 4 },
+  { slug: 'integrius-vs-atlan', daysAgo: 2 },
+  { slug: 'integrius-vs-alation', daysAgo: 1 },
+  { slug: 'integrius-vs-palantir-foundry', daysAgo: 0 },
 ];
 
 interface ParsedArticle {
@@ -123,7 +137,7 @@ function publishedAtFor(slug: string, base: number): Date {
 
 async function main() {
   const dir = join(process.cwd(), 'prisma', 'articles');
-  const files = readdirSync(dir).filter((f) => f.endsWith('.md'));
+  const files = readdirSync(dir).filter((f) => f.endsWith('.md') && f !== 'README.md');
 
   if (files.length === 0) {
     console.error(`No .md files found in ${dir}`);

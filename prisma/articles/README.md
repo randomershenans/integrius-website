@@ -76,3 +76,24 @@ keywords and to route readers toward the product:
 
 Each article is flagged `ai_generated = true` and carries a model attribution in
 `ai_model`, so the site's "AI-assisted" badge is accurate.
+
+## Wave 13: vs + alternatives set
+
+Twelve commercial-intent articles in the `vendor-comparisons` cluster: head to
+head comparisons and incumbent-alternatives shortlists. Specs live in
+`prisma/seed-v3-alternatives-specs.ts` (`npm run db:seed-v3`).
+
+| Slug | Type | Cluster |
+| --- | --- | --- |
+| `integrius-vs-collibra` | pillar | vendor-comparisons |
+| `integrius-vs-atlan` | pillar | vendor-comparisons |
+| `integrius-vs-alation` | pillar | vendor-comparisons |
+| `integrius-vs-mulesoft` | pillar | vendor-comparisons |
+| `integrius-vs-informatica` | pillar | vendor-comparisons |
+| `integrius-vs-dbt` | pillar | vendor-comparisons |
+| `integrius-vs-airbyte` | pillar | vendor-comparisons |
+| `integrius-vs-palantir-foundry` | pillar | vendor-comparisons |
+| `collibra-alternatives` | pillar | vendor-comparisons |
+| `mulesoft-alternatives` | pillar | vendor-comparisons |
+| `informatica-alternatives` | pillar | vendor-comparisons |
+| `fivetran-alternatives` | pillar | vendor-comparisons |
