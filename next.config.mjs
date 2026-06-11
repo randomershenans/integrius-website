@@ -18,11 +18,12 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // eu-assets.i.posthog.com: posthog-js lazy-loads feature modules from there
+      "script-src 'self' 'unsafe-inline' https://eu-assets.i.posthog.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self'",
-      "connect-src 'self' https://*.supabase.co",
+      "connect-src 'self' https://*.supabase.co https://eu.i.posthog.com https://eu-assets.i.posthog.com",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

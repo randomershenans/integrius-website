@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 import { LayoutDashboard, Key, FileText, Users, LogOut } from 'lucide-react'
 
@@ -48,7 +49,7 @@ export default function ClientPortalLayout({ children }: { children: React.React
     <div className="min-h-screen bg-gray-950 flex">
       <aside className="w-56 bg-black border-r border-white/10 flex flex-col shrink-0">
         <div className="px-5 py-5 border-b border-white/10">
-          <img src="/logo-dark.png" alt="Integrius" className="h-8 w-auto mb-1.5" />
+          <Image src="/logo-dark.png" alt="Integrius" width={1000} height={202} className="h-8 w-auto mb-1.5" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#00B8D4]/70">Portal</span>
           <p className="text-xs text-white/30 mt-1 truncate">{email}</p>
         </div>

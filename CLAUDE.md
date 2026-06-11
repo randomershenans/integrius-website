@@ -1,24 +1,29 @@
 # Integrius Website — Claude Instructions
 
 ## Project
-Next.js 14 App Router on Netlify + Supabase. Dark theme. TypeScript strict.
+Next.js 14 App Router on Netlify. Marketing site for integri.us with a git-native blog, an agentic SEO engine, an admin panel, and a client portal. Dark theme. TypeScript strict.
 
 ## Stack
 - **Framework**: Next.js 14 App Router
-- **Styling**: Tailwind CSS (dark theme, cyan accents)
-- **Database**: Supabase (portal tables) + Prisma (CMS tables only)
-- **Auth**: CMS = custom JWT (`CMS_JWT_SECRET`). Portal = Supabase Auth
-- **Deploy**: Netlify (auto-deploy on master push)
+- **Styling**: Tailwind CSS (dark theme, cyan accents), framer-motion, Lenis smooth scroll
+- **Content**: git-native blog, markdown files in `content/blog/` (contract: `content/blog/README.md`), content lib at `src/lib/content.ts`, fully statically generated. No database in the content path: publishing = merging to master
+- **Database**: Supabase (portal tables) + Prisma (`cms_admin_users` only, backs admin login)
+- **Auth**: Admin = custom JWT (`CMS_JWT_SECRET`). Portal = Supabase Auth
+- **Analytics/SEO**: PostHog (client + HogQL server), Google Search Console client (`src/lib/gsc.ts`), nightly SEO brain (`src/lib/seo-brain.ts`) that writes article markdown and opens GitHub PRs (`src/lib/github-content.ts`). Docs: `docs/AGENTIC-SEO.md`
+- **LLM surface**: `/llms.txt`, `/llms-full.txt`, `/blog/<slug>/raw.md`; robots.txt allows AI crawlers
+- **Deploy**: Netlify (auto-deploy on master push). Build runs `prisma migrate deploy`; `content/**` and `public/fonts/*.ttf` are bundled into functions via `netlify.toml included_files`
 
 ## Key conventions
+- Blog articles: frontmatter per `content/blog/README.md`, body starts at `##` (no H1), British spelling, internal links only to existing slugs
 - Portal API routes: `/api/portal/admin/**` (CMS JWT) and `/api/portal/client/**` (Supabase JWT)
-- Admin UI: `/admin/**` — unified CMS + client management
-- Client portal: `/portal/dashboard/**`
+- Admin UI: `/admin/**` (clients, licenses, SEO brain). Client portal: `/portal/dashboard/**`
 - No `max-w` constraints on dashboard/admin content areas (full width)
-- No em dashes in content copy — use commas, colons, or periods instead
+- No em dashes anywhere in copy: use commas, colons, or periods instead
+- No sparkles/AI-cliche icons: use a mono `>` prompt glyph or neutral icons
 - License key format: `INT-{PRODUCT}-{TIER}-{6RANDOM}-{CHECKSUM}`
 - Valid products: `CORE | OPTIC | SEARCH | SDK`
 - Valid tiers: `PILOT | ENTERPRISE | PLATFORM_LITE | PLATFORM`
+- Verify UI with production builds (`npx next build` + `next start`); the dev-server preview does not hydrate in the Claude preview browser
 
 ---
 

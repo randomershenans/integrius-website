@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
     activeLicenses = licData ?? []
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = (orgs ?? []).map((org: any) => {
     const orgLicenses = activeLicenses.filter(l => l.org_id === org.id)
     return {
