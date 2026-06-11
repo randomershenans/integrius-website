@@ -2,6 +2,10 @@
   command = "npx prisma migrate deploy && npx prisma generate && npm run build"
   publish = ".next"
 
+[functions]
+  # Inter TTFs for Open Graph image generation (src/lib/og-image.tsx)
+  included_files = ["public/fonts/*.ttf"]
+
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
