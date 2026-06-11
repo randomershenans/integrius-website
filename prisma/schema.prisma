@@ -109,23 +109,6 @@ model cms_articles {
   @@index([slug])
 }
 
-// SEO brain runs — nightly agentic SEO analysis (GSC + PostHog + Claude)
-model cms_seo_runs {
-  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  started_at          DateTime  @default(now()) @db.Timestamptz(6)
-  finished_at         DateTime? @db.Timestamptz(6)
-  status              String    @default("ok")   // "ok" | "error" | "partial"
-  gsc_rows            Int       @default(0)
-  posthog_rows        Int       @default(0)
-  opportunities_found Int       @default(0)
-  specs_created       Int       @default(0)
-  quick_wins          Json      @default("[]")   // [{ page, query, impressions, ctr, position, suggested_action }]
-  report              Json      @default("{}")   // full structured analysis result
-  error               String?
-
-  @@index([started_at])
-}
-
 // Generation queue — articles scheduled for AI generation
 model cms_generation_queue {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid

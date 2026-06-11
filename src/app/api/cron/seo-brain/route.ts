@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runSeoBrain } from '@/lib/seo-brain';
 
-// Called nightly by the Netlify scheduled function netlify/functions/seo-brain-cron.js.
-// 1. Dispatches any due auto-queued generation jobs
-// 2. Gathers GSC + PostHog signals and the existing content inventory
-// 3. Asks Claude for new article opportunities and quick wins
-// 4. Persists new specs (and queue entries when AUTO_QUEUE_GENERATION=true)
+// Called daily by the Netlify scheduled function netlify/functions/seo-brain-cron.js
+// (fire-and-forget: the function dispatches and does not await completion).
+// 1. Gathers GSC + PostHog signals and the git-native content inventory
+// 2. Asks Claude for new article opportunities and quick wins
+// 3. Writes complete article markdown for the top opportunities
+// 4. Opens a GitHub PR adding the files under content/blog/ (merge = publish)
 //
+// Returns the full run report as JSON. No database writes.
 // Secured with CRON_SECRET, passed as ?secret=... or "Authorization: Bearer ...".
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 120;
+export const maxDuration = 300; // article generation is multiple Claude calls
 
 export async function GET(req: NextRequest) {
   const expected = process.env.CRON_SECRET;
@@ -23,8 +25,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const summary = await runSeoBrain();
-    return NextResponse.json({ ...summary, ran_at: new Date().toISOString() });
+    const report = await runSeoBrain();
+    return NextResponse.json(report);
   } catch (err) {
     // runSeoBrain handles its own failures; this is a last-resort guard
     const message = err instanceof Error ? err.message : 'SEO brain run failed';

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
+import { getAllArticles, clusters } from '@/lib/content';
 import { BlogHeader } from '@/components/blog/BlogHeader';
 import { BlogFooter } from '@/components/blog/BlogFooter';
 
@@ -15,46 +15,18 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = 'force-dynamic';
-
-async function getArticles() {
-  return prisma.cms_articles.findMany({
-    where: { status: 'published' },
-    orderBy: { published_at: 'desc' },
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      excerpt: true,
-      primary_keyword: true,
-      article_type: true,
-      published_at: true,
-      word_count: true,
-      cluster: { select: { name: true, slug: true } },
-    },
-  });
-}
-
-async function getClusters() {
-  return prisma.cms_keyword_clusters.findMany({
-    orderBy: { sort_order: 'asc' },
-    select: { id: true, name: true, slug: true },
-  });
-}
-
-function readingTime(wordCount: number | null): string {
+function readingTime(wordCount: number): string {
   if (!wordCount) return '';
   const mins = Math.ceil(wordCount / 220);
   return `${mins} min read`;
 }
 
-function formatDate(d: Date | null): string {
-  if (!d) return '';
+function formatDate(d: Date): string {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
 }
 
-export default async function BlogPage() {
-  const [articles, clusters] = await Promise.all([getArticles(), getClusters()]);
+export default function BlogPage() {
+  const articles = getAllArticles();
 
   const pillars = articles.filter(a => a.article_type === 'pillar');
   const faqs    = articles.filter(a => a.article_type === 'faq');
@@ -84,7 +56,7 @@ export default async function BlogPage() {
           </Link>
           {clusters.map(c => (
             <Link
-              key={c.id}
+              key={c.slug}
               href={`/blog/topic/${c.slug}`}
               className="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors bg-white/5 text-white/60 border-white/10 hover:bg-[#00B8D4]/20 hover:text-[#00B8D4] hover:border-[#00B8D4]/40"
             >
@@ -102,7 +74,7 @@ export default async function BlogPage() {
           <section className="mb-16">
             <div className="grid gap-8 md:grid-cols-2">
               {pillars.map(a => (
-                <Link key={a.id} href={`/blog/${a.slug}`} className="group block">
+                <Link key={a.slug} href={`/blog/${a.slug}`} className="group block">
                   <article className="border border-white/10 rounded-xl p-6 bg-white/5 hover:border-[#00B8D4]/50 hover:bg-white/8 transition-all">
                     {a.cluster && (
                       <span className="text-xs font-semibold uppercase tracking-wider text-[#00B8D4] mb-3 block">
@@ -116,8 +88,8 @@ export default async function BlogPage() {
                       <p className="text-sm text-white/60 mb-4 line-clamp-3">{a.excerpt}</p>
                     )}
                     <div className="flex items-center gap-3 text-xs text-white/40">
-                      <span>{formatDate(a.published_at)}</span>
-                      {a.word_count && <span>{readingTime(a.word_count)}</span>}
+                      <span>{formatDate(a.published)}</span>
+                      <span>{readingTime(a.word_count)}</span>
                     </div>
                   </article>
                 </Link>
@@ -134,7 +106,7 @@ export default async function BlogPage() {
             </h2>
             <div className="divide-y divide-white/10">
               {faqs.map(a => (
-                <Link key={a.id} href={`/blog/${a.slug}`} className="group block py-4 hover:pl-2 transition-all">
+                <Link key={a.slug} href={`/blog/${a.slug}`} className="group block py-4 hover:pl-2 transition-all">
                   <div className="flex items-center justify-between">
                     <span className="text-white/80 font-medium group-hover:text-[#00B8D4]">{a.title}</span>
                     <span className="text-xs text-white/40 ml-4 shrink-0">{readingTime(a.word_count)}</span>

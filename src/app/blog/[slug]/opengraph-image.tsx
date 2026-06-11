@@ -1,39 +1,21 @@
-import prisma from '@/lib/prisma';
+import { getAllArticles, getArticle } from '@/lib/content';
 import { brandOgImage, OG_SIZE } from '@/lib/og-image';
 
-export const runtime = 'nodejs';
 export const alt = 'Integrius blog article';
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  let title = 'The Integrius Blog';
-  let eyebrow = 'Integrius blog';
-  let tag: string | undefined;
+export function generateStaticParams() {
+  return getAllArticles().map((a) => ({ slug: a.slug }));
+}
 
-  try {
-    const article = await prisma.cms_articles.findUnique({
-      where: { slug: params.slug },
-      select: {
-        title: true,
-        article_type: true,
-        status: true,
-        cluster: { select: { name: true } },
-      },
-    });
-    if (article && article.status === 'published') {
-      title = article.title;
-      eyebrow = article.cluster?.name ? `${article.cluster.name} · Integrius blog` : 'Integrius blog';
-      tag = article.article_type === 'faq' ? 'FAQ' : 'Guide';
-    }
-  } catch {
-    // Database unavailable: fall back to the brand card rather than failing the image
-  }
+export default function Image({ params }: { params: { slug: string } }) {
+  const article = getArticle(params.slug);
 
   return brandOgImage({
-    eyebrow,
-    titleLines: [{ text: title }],
+    eyebrow: article?.cluster?.name ? `${article.cluster.name} · Integrius blog` : 'Integrius blog',
+    titleLines: [{ text: article?.title ?? 'The Integrius Blog' }],
     footer: 'integri.us/blog',
-    tag,
+    tag: article ? (article.article_type === 'faq' ? 'FAQ' : 'Guide') : undefined,
   });
 }
