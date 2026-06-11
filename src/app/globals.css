@@ -3,28 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --brand: #3b5bdb;
-  --brand-dark: #2d45b0;
+  --brand: #00B8D4;
+  --brand-dark: #0091EA;
   --font-inter: var(--font-inter, 'Inter', ui-sans-serif, system-ui, sans-serif);
 }
 
 body {
   font-family: var(--font-inter);
-  @apply text-gray-900 antialiased;
+  @apply text-white antialiased;
 }
 
-/* Article prose styles */
-.prose h1 { @apply text-3xl font-bold mb-6 mt-0 text-gray-900; }
-.prose h2 { @apply text-2xl font-semibold mb-4 mt-10 text-gray-900; }
-.prose h3 { @apply text-xl font-semibold mb-3 mt-8 text-gray-800; }
-.prose p  { @apply mb-5 leading-relaxed text-gray-700; }
-.prose ul { @apply mb-5 pl-5 list-disc space-y-1 text-gray-700; }
-.prose ol { @apply mb-5 pl-5 list-decimal space-y-1 text-gray-700; }
+/* Article prose styles: dark theme. These plain-CSS rules outrank the
+   typography plugin, so they are the single source of truth for article
+   rendering on the black background. */
+.prose h1 { @apply text-3xl font-bold mb-6 mt-0 text-white; }
+.prose h2 { @apply text-2xl font-semibold mb-4 mt-10 text-white; }
+.prose h3 { @apply text-xl font-semibold mb-3 mt-8 text-white/90; }
+.prose h4 { @apply text-lg font-semibold mb-3 mt-6 text-white/90; }
+.prose p  { @apply mb-5 leading-relaxed text-white/80; }
+.prose ul { @apply mb-5 pl-5 list-disc space-y-1 text-white/80; }
+.prose ol { @apply mb-5 pl-5 list-decimal space-y-1 text-white/80; }
 .prose li { @apply leading-relaxed; }
-.prose strong { @apply font-semibold text-gray-900; }
-.prose a  { @apply text-brand-500 underline hover:text-brand-700; }
-.prose code { @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono; }
-.prose pre  { @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-6; }
+.prose li::marker { color: var(--brand); }
+.prose strong { @apply font-semibold text-white; }
+.prose a  { @apply text-[#00B8D4] underline underline-offset-2 hover:text-[#66d9e8] transition-colors; }
+.prose code { @apply bg-[#00B8D4]/10 text-[#66d9e8] px-1.5 py-0.5 rounded text-sm font-mono; }
+.prose pre  { @apply bg-black/60 border border-white/10 text-gray-100 p-4 rounded-lg overflow-x-auto mb-6; }
 .prose pre code { @apply bg-transparent p-0 text-gray-100; }
-.prose blockquote { @apply border-l-4 border-brand-500 pl-4 italic text-gray-600 mb-5; }
-.prose hr { @apply border-gray-200 my-10; }
+.prose blockquote { @apply border-l-4 border-[#00B8D4] pl-4 italic text-white/60 mb-5; }
+.prose hr { @apply border-white/10 my-10; }
+
+/* GFM tables (comparison articles) */
+.prose table { @apply w-full mb-6 text-sm border border-white/10 rounded-lg overflow-hidden; border-collapse: separate; border-spacing: 0; }
+.prose thead { @apply bg-white/5; }
+.prose th { @apply text-left font-semibold text-white px-4 py-3 border-b border-white/10; }
+.prose td { @apply text-white/75 px-4 py-3 border-b border-white/5 align-top; }
+.prose tbody tr:last-child td { @apply border-b-0; }
