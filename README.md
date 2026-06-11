@@ -1,31 +1,24 @@
-# Integrius CMS
+# Integrius marketing site
 
 > **THIS IS NOT THE INTEGRIUS PRODUCT.**
 >
-> This is the marketing blog CMS for integri.us. It is a completely separate Next.js application that shares the same Postgres database (using `cms_` prefixed tables) but has no code dependency on the main product whatsoever. Deploy them independently.
+> This is the marketing site for integri.us: the public website, the git-native blog, the agentic SEO engine, the admin panel, and the client portal. It shares a Postgres database with the product but only touches `cms_` prefixed tables, and has no code dependency on the product whatsoever.
 
 ---
 
 ## What it does
 
-- **Public blog** at `/blog` — SEO-optimised article listing and article pages with Article + FAQ schema markup, sitemap at `/sitemap.xml`
-- **Admin panel** at `/admin` — JWT-authenticated dashboard to manage posts, review AI-generated drafts, publish, and share
-- **AI generation** — Claude (claude-3-5-sonnet) writes articles from a structured content bank of 23 keyword-targeted specs (8 pillar articles + 15 FAQ pieces)
-- **LinkedIn auto-share** — publishes a hook + link to the company page on every article publish
-- **Cron endpoint** — `GET /api/cron/publish?secret=...` publishes scheduled articles and auto-shares to LinkedIn, called hourly by an external scheduler
+- **Public site + blog** at `/` and `/blog`: statically built from markdown in `content/blog/`, with Article + FAQ schema markup, Open Graph images, and a sitemap at `/sitemap.xml`
+- **Git-native publishing**: an article is a markdown file; publishing means merging it to master (Netlify auto-deploys). No database in the content path. See [content/blog/README.md](content/blog/README.md) for the file contract
+- **Agentic SEO brain**: a nightly run reads Google Search Console + PostHog signals, finds content gaps, writes draft articles, and opens a PR per run for human review. See [docs/AGENTIC-SEO.md](docs/AGENTIC-SEO.md)
+- **Admin panel** at `/admin`: JWT-authenticated dashboard for client and license management plus SEO brain runs and reports
+- **Client portal** at `/portal`: Supabase-authenticated portal for clients (licenses, downloads)
 
 ---
 
-## Separation from the product
+## Architecture in one paragraph
 
-| | Main product | CMS |
-|---|---|---|
-| **Codebase** | `server/`, `src/` (root) | `cms/` |
-| **package.json** | Root | `cms/package.json` |
-| **DB tables** | No prefix | `cms_` prefix |
-| **Prisma schema** | `prisma/schema.prisma` | `cms/prisma/schema.prisma` |
-| **Deployment** | Separate Netlify/Vercel site | Separate Netlify/Vercel site |
-| **Auth** | Product JWT sessions | CMS-only JWT cookies |
+Next.js 14 App Router on Netlify. The blog content layer (`src/lib/content.ts`) reads `content/blog/*.md` from the filesystem at build time. The SEO brain (`src/lib/seo-brain.ts`) runs from a Netlify scheduled function (`netlify/functions/seo-brain-cron.js`) hitting `/api/cron/seo-brain`, and opens content PRs via the GitHub API (`src/lib/github-content.ts`). Prisma manages a single table, `cms_admin_users`, which backs admin login. Portal tables live in Supabase (`supabase/migrations/`).
 
 ---
 
@@ -34,41 +27,31 @@
 ### 1. Install dependencies
 
 ```bash
-cd cms
 npm install
 ```
 
 ### 2. Environment variables
 
-Copy `.env.example` to `.env.local` and fill in:
+Copy `.env.example` to `.env.local` and fill in the values. The essentials:
 
 ```
-DATABASE_URL=          # same Postgres as the product — CMS uses cms_ tables only
+DATABASE_URL=          # same Postgres as the product — this site uses cms_ tables only
 CMS_ADMIN_EMAIL=       # your admin login email
 CMS_ADMIN_PASSWORD=    # strong password
 CMS_JWT_SECRET=        # random 32+ char string (openssl rand -hex 32)
-ANTHROPIC_API_KEY=     # sk-ant-... from console.anthropic.com
-LINKEDIN_ACCESS_TOKEN= # OAuth 2.0 token for company page
-LINKEDIN_ORGANIZATION_ID= # urn:li:organization:<id> from LinkedIn
 NEXT_PUBLIC_SITE_URL=  # https://integri.us
-CRON_SECRET=           # random string, passed as ?secret= by cron caller
 ```
 
-### 3. Run database migrations
+The SEO brain, portal, and contact form need more (Anthropic, GSC, PostHog, GitHub, Supabase, Resend); `.env.example` documents every variable, and [docs/AGENTIC-SEO.md](docs/AGENTIC-SEO.md) walks through the SEO brain credentials.
+
+### 3. Run database migrations and seed the admin user
 
 ```bash
-npx prisma db push
-```
-
-### 4. Seed the content bank
-
-This creates the admin user and loads all 23 keyword specs:
-
-```bash
+npm run db:migrate
 npm run db:seed
 ```
 
-### 5. Start dev server
+### 4. Start dev server
 
 ```bash
 npm run dev
@@ -77,101 +60,27 @@ npm run dev
 
 ---
 
-## Content bank
+## Writing and publishing an article
 
-23 pre-loaded article specifications across 6 keyword clusters:
+1. Add a markdown file to `content/blog/` following the contract in [content/blog/README.md](content/blog/README.md) (frontmatter keys, body starts at H2, no em dashes, UK English)
+2. Open a PR; review it like code
+3. Merge to master: Netlify rebuilds and the article is live
 
-| Cluster | Specs |
-|---------|-------|
-| Data Integration Problems | 6 (pillar + FAQs) |
-| Data Products & Data Mesh | 5 (pillar + FAQs) |
-| Enterprise Search | 4 (pillar + FAQs) |
-| AI & Data Readiness | 2 (pillar + FAQs) |
-| Self-Hosted & Sovereignty | 3 (pillar + FAQs) |
-| Industry Verticals | 3 (pillar + FAQs) |
-
-All specs include: primary keyword, secondary keywords, H2 structure, key data points to include, meta title/description, CTA text, and internal link targets.
-
----
-
-## AI generation
-
-1. Go to `/admin/generate`
-2. Pick a spec
-3. Click **Generate with Claude** — takes 20-40 seconds
-4. Review and edit the draft in the article editor
-5. Publish — LinkedIn share triggers automatically (or manually from editor)
-
-**Writing rules baked into the prompt:**
-- Problem-first. Integrius appears as the answer, never the headline.
-- No em dashes. Not a single one.
-- UK English.
-- Short sentences, short paragraphs.
-- Every claim cites a named source.
-- Answers the primary keyword query in the first 150 words.
-
----
-
-## Publishing cadence
-
-Recommended schedule for bi-daily content:
-
-| Day | Action |
-|-----|--------|
-| Monday | Publish pillar article, auto-share to LinkedIn |
-| Wednesday | Publish FAQ/glossary piece |
-| Thursday | Publish pillar article, auto-share to LinkedIn |
-| Friday | Ross personal LinkedIn post linking to Thursday article |
-
-Schedule articles in the editor (`status: scheduled`, set `scheduled_for`), then the hourly cron picks them up automatically.
-
----
-
-## Cron setup
-
-The cron endpoint publishes scheduled articles and auto-shares to LinkedIn.
-
-**URL:** `GET https://your-cms-domain.com/api/cron/publish?secret=YOUR_CRON_SECRET`
-
-**Options:**
-- **Vercel Cron** (`vercel.json`): `{ "crons": [{ "path": "/api/cron/publish?secret=...", "schedule": "0 * * * *" }] }`
-- **GitHub Actions**: scheduled workflow hitting the URL hourly
-- **EasyCron / cron-job.org**: free external cron services
-
----
-
-## LinkedIn setup
-
-1. Create a LinkedIn Developer App at https://developer.linkedin.com/
-2. Add the **Marketing Developer Platform** product to get UGC Posts API access
-3. Generate an OAuth 2.0 access token with `w_organization_social` scope
-4. Set `LINKEDIN_ACCESS_TOKEN` and `LINKEDIN_ORGANIZATION_ID` in `.env.local`
-
-Access tokens expire after 60 days. Refresh them via the LinkedIn OAuth flow or use a long-lived token via the token refresh endpoint.
+The SEO brain does steps 1 and 2 for you on its nightly run; you do step 3.
 
 ---
 
 ## SEO features
 
 - **Article schema** (JSON-LD) on every article page
-- **FAQ schema** (JSON-LD) on FAQ/glossary articles — enables People Also Ask placement
-- **OpenGraph + Twitter card** meta on all pages
-- **Sitemap** at `/sitemap.xml` (auto-generated, updated on each article publish)
+- **FAQ schema** (JSON-LD) on FAQ articles, extracted from H2 questions
+- **Open Graph + Twitter card** meta with generated OG images, site-wide and per-article
+- **Sitemap** at `/sitemap.xml`, rebuilt with the static site on every deploy
 - **Canonical URLs** on all pages
-- **ISR** (Incremental Static Regeneration) — pages revalidate every 60 seconds
+- **LLM-friendly endpoints** for the git-native content
 
 ---
 
 ## Deployment
 
-Deploy `cms/` as a separate site from the main product:
-
-```bash
-# Netlify — from the cms/ directory
-netlify deploy --dir=.next --prod
-
-# Vercel — from the cms/ directory
-vercel --prod
-```
-
-Set all environment variables in the deployment platform's settings. The `DATABASE_URL` should point to the same Postgres as the product — the CMS only touches `cms_` prefixed tables.
+Netlify auto-deploys on every push to master. The build runs `npx prisma migrate deploy && npx prisma generate && npm run build` (see `netlify.toml`), so schema migrations apply themselves. Set all environment variables in the Netlify site settings.

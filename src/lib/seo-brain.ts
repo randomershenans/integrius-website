@@ -102,7 +102,7 @@ export interface SeoBrainReport {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-/** House rule: no em dashes in any copy. Same replacement as src/lib/claude.ts. */
+/** House rule: no em dashes in any copy. */
 export function stripEmDashes(text: string): string {
   return text.replace(/—/g, ',').replace(/--/g, ',');
 }
