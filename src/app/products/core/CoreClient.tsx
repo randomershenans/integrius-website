@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Zap, Shield, GitBranch, CheckCircle2, ArrowRight, Eye, Layers, Lock, KeyRound, Network } from 'lucide-react';
 import { SpaceBackground } from '@/components/landing/SpaceBackground';
 import { FlyingDataIcons } from '@/components/landing/FlyingDataIcons';
@@ -306,10 +307,13 @@ export function CoreClient() {
                 Every data product knows what it depends on and what depends on it. Change a source schema, remove a field, revoke access: see exactly what breaks before you do it.
               </p>
               <div className="rounded-xl overflow-hidden border border-cyan-500/20 mb-6 shadow-2xl shadow-cyan-500/10">
-                <img
+                <Image
                   src="/screenshots/integrius-dependency-graph.gif"
                   alt="Integrius dependency graph and blast radius explorer"
-                  className="w-full"
+                  width={1280}
+                  height={727}
+                  unoptimized
+                  className="w-full h-auto"
                 />
                 <div className="px-4 py-2 bg-black/60 border-t border-white/10 text-center">
                   <p className="text-xs text-white/40">Live dependency graph. Blast radius computed in real time. Every upstream and downstream relationship, visualised.</p>

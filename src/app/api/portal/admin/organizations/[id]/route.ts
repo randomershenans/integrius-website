@@ -32,7 +32,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   if (licError) return NextResponse.json({ error: licError.message }, { status: 500 })
   if (invError) return NextResponse.json({ error: invError.message }, { status: 500 })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapLicense = (l: any) => ({
     id: l.id,
     licenseKey: l.license_key,
@@ -49,7 +48,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     revokedReason: l.revoked_reason,
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapInvoice = (i: any) => ({
     id: i.id,
     amount: i.amount,
