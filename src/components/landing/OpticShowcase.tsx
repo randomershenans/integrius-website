@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, Lock, Sparkles } from 'lucide-react';
+import { ArrowRight, Lock } from 'lucide-react';
 
 const QUESTION = 'Which enterprise accounts are at churn risk this quarter?';
 
@@ -70,7 +70,7 @@ export function OpticShowcase() {
         <div className="max-w-3xl mx-auto">
           {/* The question bar */}
           <div className="flex items-center gap-3 p-4 rounded-xl bg-black/60 border border-cyan-500/30 backdrop-blur-lg shadow-lg shadow-cyan-500/10">
-            <Sparkles className="h-5 w-5 text-cyan-400 shrink-0" />
+            <span className="font-mono text-cyan-400 font-bold shrink-0" aria-hidden>&gt;</span>
             <p className="font-mono text-sm md:text-base text-white/90 min-h-[1.5em]">
               {typed}
               {!answered && <span className="inline-block w-2 h-4 bg-cyan-400 ml-0.5 animate-pulse align-middle" />}

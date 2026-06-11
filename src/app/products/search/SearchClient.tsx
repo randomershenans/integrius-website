@@ -55,10 +55,10 @@ const personas = [
 ];
 
 const pricingTiers = [
-  { name: 'Pilot', search: 'Not available', price: '—', highlight: false },
+  { name: 'Pilot', search: 'Not available', price: '', highlight: false },
   { name: 'Enterprise', search: 'Premium add-on', price: '€100,000/year', highlight: false },
   { name: 'Platform Lite', search: 'Premium add-on', price: '€100,000/year', highlight: false },
-  { name: 'Platform', search: 'Included', price: '—', highlight: true },
+  { name: 'Platform', search: 'Included', price: 'No extra cost', highlight: true },
 ];
 
 const competitors = [
@@ -309,7 +309,7 @@ export function SearchClient() {
                       >
                         <td className={`py-3 px-4 font-semibold ${tier.highlight ? 'text-cyan-400' : 'text-white'}`}>{tier.name}</td>
                         <td className={`py-3 px-4 ${tier.highlight ? 'text-emerald-400 font-semibold' : 'text-white/60'}`}>{tier.search}</td>
-                        <td className={`py-3 px-4 font-bold ${tier.highlight ? 'text-white/40' : tier.price === '—' ? 'text-white/30' : 'text-cyan-400'}`}>{tier.price}</td>
+                        <td className={`py-3 px-4 font-bold ${tier.highlight ? 'text-white/40' : !tier.price ? 'text-white/30' : 'text-cyan-400'}`}>{tier.price}</td>
                       </motion.tr>
                     ))}
                   </tbody>
