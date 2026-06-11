@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { TrendingUp, Users, Key, AlertTriangle, FileText, Zap, Plus, ArrowRight } from 'lucide-react'
+import { TrendingUp, Users, Key, AlertTriangle, FileText, Plus, ArrowRight } from 'lucide-react'
 
 interface BizStats {
   mrr: number
@@ -32,11 +32,8 @@ interface OrgRow {
   createdAt: string
 }
 
-interface CmsStats {
+interface BlogStats {
   published: number
-  draft: number
-  scheduled: number
-  pending_gen: number
 }
 
 function daysUntil(d: string) {
@@ -58,7 +55,7 @@ export default function AdminDashboard() {
   const [biz, setBiz] = useState<BizStats | null>(null)
   const [licenses, setLicenses] = useState<License[]>([])
   const [clients, setClients] = useState<OrgRow[]>([])
-  const [cms, setCms] = useState<CmsStats | null>(null)
+  const [blog, setBlog] = useState<BlogStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -67,11 +64,11 @@ export default function AdminDashboard() {
       fetch('/api/portal/admin/licenses').then(r => r.ok ? r.json() : []),
       fetch('/api/portal/admin/organizations').then(r => r.ok ? r.json() : []),
       fetch('/api/admin/stats').then(r => r.ok ? r.json() : null),
-    ]).then(([bizData, licData, orgData, cmsData]) => {
+    ]).then(([bizData, licData, orgData, blogData]) => {
       setBiz(bizData)
       setLicenses(licData ?? [])
       setClients(orgData ?? [])
-      setCms(cmsData)
+      setBlog(blogData)
       setLoading(false)
     })
   }, [])
@@ -225,7 +222,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* CMS quick stats */}
+      {/* Blog quick stats: git-native, every file in content/blog/ is published */}
       <div className="bg-black/40 rounded-xl border border-white/10">
         <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
           <h2 className="font-semibold text-white text-sm flex items-center gap-2">
@@ -233,26 +230,20 @@ export default function AdminDashboard() {
             Website &amp; Blog
           </h2>
           <div className="flex items-center gap-3">
-            <Link href="/admin/generate" className="text-xs text-[#00B8D4] hover:underline flex items-center gap-1">
-              <Zap size={11} />Generate
+            <Link href="/admin/seo" className="text-xs text-[#00B8D4] hover:underline flex items-center gap-1">
+              <TrendingUp size={11} />SEO Brain
             </Link>
-            <Link href="/admin/articles" className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1">
-              Articles <ArrowRight size={11} />
+            <Link href="/blog" className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1">
+              View blog <ArrowRight size={11} />
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-4 divide-x divide-white/5">
-          {[
-            { label: 'Published', value: cms?.published ?? '—', color: 'text-green-400' },
-            { label: 'Drafts',    value: cms?.draft ?? '—',      color: 'text-white/50' },
-            { label: 'Scheduled', value: cms?.scheduled ?? '—',  color: 'text-[#00B8D4]' },
-            { label: 'Gen queue', value: cms?.pending_gen ?? '—', color: 'text-purple-400' },
-          ].map(s => (
-            <div key={s.label} className="px-6 py-4">
-              <p className="text-xs text-white/30 mb-1">{s.label}</p>
-              <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-            </div>
-          ))}
+        <div className="px-6 py-4">
+          <p className="text-xs text-white/30 mb-1">Published articles</p>
+          <p className="text-xl font-bold text-green-400">{blog?.published ?? '-'}</p>
+          <p className="text-xs text-white/30 mt-1">
+            Markdown in content/blog/, published by merging a PR. New drafts arrive as SEO brain PRs.
+          </p>
         </div>
       </div>
     </div>
