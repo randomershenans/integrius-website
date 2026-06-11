@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "website",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3002
+    },
+    {
+      "name": "website-prod",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "CMS_JWT_SECRET=local-build-dummy-secret-0123456789abcdef DATABASE_URL=postgresql://user:pass@localhost:5432/dummy NEXT_PUBLIC_SUPABASE_URL=https://dummy.supabase.co NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=dummy SUPABASE_SECRET_KEY=dummy CRON_SECRET=dummy-cron RESEND_API_KEY=re_dummy ANTHROPIC_API_KEY=sk-ant-dummy NEXT_PUBLIC_SITE_URL=http://localhost:3002 npx next start -p 3002"
+      ],
+      "port": 3002
+    }
+  ]
+}
