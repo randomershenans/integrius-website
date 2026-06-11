@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/api-auth'
-import prisma from '@/lib/prisma'
+import { getAllArticles } from '@/lib/content'
 
 export const dynamic = 'force-dynamic'
 
@@ -8,12 +8,9 @@ export async function GET(req: NextRequest) {
   const session = await requireAdmin(req)
   if (session instanceof NextResponse) return session
 
-  const [published, draft, scheduled, pending_gen] = await Promise.all([
-    prisma.cms_articles.count({ where: { status: 'published' } }),
-    prisma.cms_articles.count({ where: { status: 'draft' } }),
-    prisma.cms_articles.count({ where: { status: 'scheduled' } }),
-    prisma.cms_generation_queue.count({ where: { status: 'pending' } }),
-  ])
+  // The blog is git-native: every markdown file in content/blog/ is published.
+  // Drafts live on unmerged branches, so there is nothing else to count.
+  const published = getAllArticles().length
 
-  return NextResponse.json({ published, draft, scheduled, pending_gen })
+  return NextResponse.json({ published })
 }

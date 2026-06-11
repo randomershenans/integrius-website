@@ -1,12 +1,12 @@
 # Agentic SEO Engine
 
-The marketing site runs a nightly "SEO brain" that reads real search and traffic data, asks Claude where the content gaps are, and feeds new article specs into the existing AI generation and publishing pipeline. No human in the loop is required, but everything is visible and triggerable from the admin dashboard.
+The marketing site runs a daily "SEO brain" that reads real search and traffic data, asks Claude where the content gaps are, writes complete draft articles, and opens a GitHub pull request adding them to `content/blog/`. The blog is git-native: there is no database in the content path. A human reviews the PR, merges it, and Netlify rebuilds the static site. Publishing is the merge.
 
-## Architecture
+## The flow
 
 ```
-                 nightly (05:00 UTC)
-netlify/functions/seo-brain-cron.js
+                 daily (05:00 UTC)
+netlify/functions/seo-brain-cron.js   (fire-and-forget dispatch)
         |
         v
 GET /api/cron/seo-brain  (CRON_SECRET)
@@ -14,38 +14,49 @@ GET /api/cron/seo-brain  (CRON_SECRET)
         v
 src/lib/seo-brain.ts  runSeoBrain()
         |
-        |-- 1. Dispatch due cms_generation_queue jobs
-        |       -> netlify/functions/generate-background.js (production)
-        |       -> src/lib/claude.ts generateArticle() (local dev)
-        |
-        |-- 2. Gather signals
-        |       src/lib/gsc.ts          GSC top queries + top pages (28 days)
+        |-- 1. GATHER signals
+        |       src/lib/gsc.ts             GSC top queries + top pages (28 days)
         |       src/lib/posthog-server.ts  PostHog top pages by views
-        |       Prisma                  existing articles, specs, clusters
+        |       src/lib/content.ts         existing articles + clusters (markdown files)
         |
-        |-- 3. Claude analysis (claude-sonnet-4, circuit breaker, 60s timeout)
-        |       -> up to 5 new article opportunities + quick wins (strict JSON)
+        |-- 2. ANALYZE (claude-sonnet-4, circuit breaker, 60s timeout)
+        |       up to 5 new article opportunities + quick wins (strict JSON),
+        |       deduped against existing slugs and primary keywords
         |
-        |-- 4. Dedupe against existing slugs and primary keywords
+        |-- 3. WRITE (one Claude call per article, up to SEO_BRAIN_MAX_ARTICLES)
+        |       complete markdown file per opportunity, validated against the
+        |       house contract (frontmatter, no H1, no dashes, no dead links)
         |
-        |-- 5. Persist survivors as cms_article_specs
-        |       (AUTO_QUEUE_GENERATION=true also inserts cms_generation_queue
-        |        rows, staggered one per day at 06:00 UTC)
+        |-- 4. OPEN PR (src/lib/github-content.ts, plain fetch, no SDK)
+        |       branch seo-brain/{date}, one commit per file under
+        |       content/blog/, PR body carries the full run report
         |
-        '-- 6. Record the run in cms_seo_runs
+        '-- 5. RETURN the run report as JSON (no database writes anywhere)
 
-                 hourly (on the hour)
-netlify/functions/publish-cron.js
+        human reviews and merges the PR
         |
         v
-GET /api/cron/publish  (CRON_SECRET)
-        |
-        '-- publishes scheduled articles + shares them to LinkedIn
+Netlify auto-deploys master and statically rebuilds the blog,
+sitemap, RSS feed, OG images and llms.txt from the new files.
 ```
 
-The full loop: data in, Claude analysis, new specs, generation queue, draft articles, scheduled publish, LinkedIn share. The next night the brain sees the new pages in the GSC and PostHog data and adjusts.
+The next day the brain sees the new pages in the GSC and PostHog data and adjusts. Nothing goes live without a human merging the PR.
 
-## Google Search Console setup
+## What the brain writes
+
+Each article is a complete markdown file following `content/blog/README.md`:
+
+- Frontmatter: `title`, `slug`, `meta_title` (60 chars max), `meta_description` (155 chars max), `excerpt`, `primary_keyword`, `article_type` (`pillar` or `faq`), `cluster_slug` (must exist in `content/clusters.json`), `published` (run date), `ai_assisted: true`.
+- Body starts at `##` (the page renders the title as the H1), 1500 to 2500 words, British spelling, GFM tables where they help.
+- No em dashes or en dashes anywhere (house rule, enforced by a post-generation sweep).
+- Internal links only to existing `/blog/<slug>` URLs and product pages (`/products/core`, `/products/optic`, `/technical-brief`); links to unknown slugs are unwrapped to plain text.
+- A closing CTA linking `/contact`.
+
+Validation happens before the PR: the output must parse as frontmatter plus body, the frontmatter is rebuilt deterministically from the analysed opportunity so required fields are guaranteed, H1s are demoted, dead links unwrapped, and any deviations are listed as validation notes in the PR body.
+
+## Setup
+
+### Google Search Console
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create (or pick) a project.
 2. Enable the **Google Search Console API**: APIs and Services, Library, search for "Google Search Console API", Enable.
@@ -59,7 +70,7 @@ The full loop: data in, Claude analysis, new specs, generation queue, draft arti
 
 No googleapis dependency is used. `src/lib/gsc.ts` signs an RS256 JWT with `jose`, exchanges it at the Google OAuth token endpoint, caches the access token in module scope, and calls the Search Analytics API directly.
 
-## PostHog setup (EU cloud)
+### PostHog (EU cloud)
 
 1. In [PostHog EU](https://eu.posthog.com), open your project.
 2. Personal API key: click your avatar, Personal API keys, create one with the **Query read** scope. This is the server-side `POSTHOG_PERSONAL_API_KEY`. Never expose it to the browser.
@@ -67,7 +78,17 @@ No googleapis dependency is used. `src/lib/gsc.ts` signs an RS256 JWT with `jose
 4. `POSTHOG_API_HOST` defaults to `https://eu.posthog.com`; set it only if you use a different region.
 5. For browser-side tracking (which produces the `$pageview` events the brain reads), the public snippet uses `NEXT_PUBLIC_POSTHOG_KEY` (the project API key, `phc_...`) and `NEXT_PUBLIC_POSTHOG_HOST` (`https://eu.i.posthog.com`).
 
-`src/lib/posthog-server.ts` queries the HogQL endpoint (`POST /api/projects/{id}/query`) for top pages by views and the daily pageview trend. If PostHog is not configured the brain simply skips it and records the run as `partial`.
+`src/lib/posthog-server.ts` queries the HogQL endpoint (`POST /api/projects/{id}/query`) for top pages by views. If PostHog is not configured the brain simply skips it and reports the run as `partial`.
+
+### GitHub
+
+1. Create a [fine-grained personal access token](https://github.com/settings/tokens) scoped to the site repo with **Contents: read and write** and **Pull requests: read and write** (or a classic token with the `repo` scope).
+2. Set the env vars:
+   - `GITHUB_TOKEN`: the token
+   - `GITHUB_REPO`: the repo as `owner/repo`, e.g. `randomershenans/integrius-website`
+   - `GITHUB_BASE_BRANCH`: optional, defaults to `master`
+
+`src/lib/github-content.ts` is a minimal REST v3 client using plain fetch (no SDK). It resolves the base branch SHA, creates the branch `seo-brain/{YYYY-MM-DD}` (suffixing `-2`, `-3`, ... if the branch already exists), commits one file per article via the contents API, and opens the PR. If `GITHUB_TOKEN` is missing, the run still completes and reports `pr: not configured`; articles are generated but not pushed anywhere.
 
 ## Environment variables
 
@@ -81,48 +102,49 @@ No googleapis dependency is used. `src/lib/gsc.ts` signs an RS256 JWT with `jose
 | `POSTHOG_API_HOST` | no | Defaults to `https://eu.posthog.com` |
 | `NEXT_PUBLIC_POSTHOG_KEY` | no | Browser tracking key (`phc_...`) |
 | `NEXT_PUBLIC_POSTHOG_HOST` | no | Browser ingestion host |
-| `AUTO_QUEUE_GENERATION` | no | `true` to auto-queue generation for new specs (default off) |
+| `GITHUB_TOKEN` | for PRs | Repo-scoped personal access token |
+| `GITHUB_REPO` | for PRs | The site repo as `owner/repo` |
+| `GITHUB_BASE_BRANCH` | no | Defaults to `master` |
+| `SEO_BRAIN_MAX_ARTICLES` | no | Max articles written per run, default 2, clamped to 0..5 |
 | `CRON_SECRET` | yes | Shared secret for `/api/cron/*` routes |
-| `ANTHROPIC_API_KEY` | yes | Claude analysis and article generation |
+| `ANTHROPIC_API_KEY` | yes | Claude analysis and article writing |
 
-The brain degrades gracefully: a run with missing GSC or PostHog config still completes and is recorded with status `partial`.
+The brain degrades gracefully: a run with missing GSC, PostHog or GitHub config still completes and reports `partial` (or `pr: not configured`) instead of failing.
 
-## Scheduled functions
+## Scheduling
 
-Both schedules are declared in code, no `netlify.toml` changes needed:
+`netlify/functions/seo-brain-cron.js` runs daily at 05:00 UTC (schedule declared in code, no `netlify.toml` entry) and calls `/api/cron/seo-brain?secret=$CRON_SECRET`.
 
-- `netlify/functions/seo-brain-cron.js`: daily at 05:00 UTC, calls `/api/cron/seo-brain`.
-- `netlify/functions/publish-cron.js`: hourly, calls `/api/cron/publish` (publishes scheduled articles and shares them to LinkedIn).
+The dispatch is **fire-and-forget**: a full run now writes whole articles (multiple Claude calls) and can take minutes, far beyond the scheduled function's budget. The function fetches with a 5 second timeout, logs that the run was dispatched, and does not await completion. The trade-off is that the scheduled function's log only confirms dispatch, not success. The authoritative outcome of a run is the PR it opens (or does not open); failures are visible in the Next.js function logs for `/api/cron/seo-brain` and in the run report when triggered manually.
 
-Each function fires the corresponding Next.js cron route with `?secret=$CRON_SECRET` and logs the response. If the run takes longer than the function's 25 second wait, the trigger logs a timeout note and the run continues server-side.
+The old hourly `publish-cron.js` is gone: with a git-native blog there is no scheduled publish step, content goes live when a PR merges and Netlify rebuilds.
 
 ## Triggering manually
 
-- Admin dashboard: `/admin/seo` has a "Run SEO brain now" button (admin session auth, no cron secret needed). The page also shows config status, run history, the latest opportunities with rationale, quick wins, and live GSC top queries.
+- Admin dashboard: `/admin/seo` has a "Run SEO brain now" button (admin session auth, no cron secret needed). The full run report renders inline: opportunities with rationale, quick wins, articles written and the PR link. The page also shows config status chips (Search Console, PostHog, GitHub), the list of open `seo-brain/*` PRs, live GSC top queries and live PostHog top pages.
 - curl:
 
 ```bash
 curl "https://integri.us/api/cron/seo-brain?secret=$CRON_SECRET"
-curl "https://integri.us/api/cron/publish?secret=$CRON_SECRET"
 ```
 
-## Data model
+Both return the same JSON run report. There is no run history table: the durable artefacts of a run are its PR (branch, commits, report in the PR body) and the merged markdown files.
 
-Each run writes one row to `cms_seo_runs`:
+## Reviewing a PR
 
-| Column | Meaning |
-|---|---|
-| `status` | `ok`, `partial` (a data source was missing or failed), or `error` (analysis failed) |
-| `gsc_rows` / `posthog_rows` | how many signal rows were gathered |
-| `opportunities_found` | opportunities Claude proposed before dedupe |
-| `specs_created` | new `cms_article_specs` rows actually created |
-| `quick_wins` | JSON list of striking-distance improvements (page, query, impressions, CTR, position, suggested action) |
-| `report` | the full structured analysis, including per-opportunity rationale and run notes |
+Every PR body contains the signals used (top GSC queries), the chosen opportunities with rationale, the quick wins for manual follow-up, and a review checklist. When reviewing:
 
-New specs flow into the existing machinery: `cms_article_specs` to `cms_generation_queue` (when auto-queue is on) to `generate-background` to draft `cms_articles`, then publish and LinkedIn share via the hourly cron. Drafts still need to be published or scheduled from `/admin/articles`, so nothing goes live without the usual review step.
+1. Check facts and product claims. The writer is instructed not to invent benchmarks, customers or statistics, but verify anything specific.
+2. Check the copy reads naturally: British spelling, no em or en dashes, no H1 in the body.
+3. Check internal links: they must point at existing `/blog/` slugs or the product pages. The validator unwraps unknown slugs, but confirm the remaining links make sense in context.
+4. Check the frontmatter: meta title 60 characters or fewer, meta description 155 or fewer, sensible cluster.
+5. Edit freely on the branch if the article needs work, then merge. Merging publishes: the article appears in the blog index, sitemap, RSS feed, OG images and llms.txt on the next deploy.
+6. Quick wins in the PR body need manual action (meta rewrites, internal links on existing pages); they involve no file changes in the PR itself.
 
 ## House rules honoured
 
-- No em dashes in any generated copy. The brain strips them from every field Claude returns, and the article generator strips them again at generation time.
+- No em dashes (and no en dashes) in any generated copy. The brain strips them from every analysis field and sweeps the article markdown again after generation.
 - Meta titles are capped at 60 characters, meta descriptions at 155.
-- Every opportunity must map to an existing keyword cluster; unknown clusters are skipped and noted in the run report.
+- Every opportunity must map to an existing cluster in `content/clusters.json`; unknown clusters are skipped and noted in the run report.
+- The body starts at `##`; FAQ articles use questions as their `##` headings so FAQ structured data extracts cleanly.
+- `ai_assisted: true` is always set, so the AI-assisted badge renders (honest disclosure).

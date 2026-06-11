@@ -2,6 +2,12 @@
   command = "npx prisma migrate deploy && npx prisma generate && npm run build"
   publish = ".next"
 
+[functions]
+  # Inter TTFs for Open Graph image generation (src/lib/og-image.tsx) and the
+  # git-native blog content, which the SEO brain reads at request time
+  # (src/lib/content.ts uses fs against content/blog/).
+  included_files = ["public/fonts/*.ttf", "content/**"]
+
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

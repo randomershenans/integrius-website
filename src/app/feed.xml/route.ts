@@ -1,30 +1,24 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { getAllArticles } from '@/lib/content';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 
 export async function GET() {
   const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
   const siteName = 'Integrius Blog';
   const desc     = 'Problem-first thinking on data integration, data products, and enterprise data governance.';
 
-  const articles = await prisma.cms_articles.findMany({
-    where: { status: 'published' },
-    orderBy: { published_at: 'desc' },
-    take: 50,
-    select: { title: true, slug: true, excerpt: true, published_at: true, updated_at: true, primary_keyword: true },
-  });
+  const articles = getAllArticles().slice(0, 50);
 
   const items = articles.map(a => {
     const url = `${siteUrl}/blog/${a.slug}`;
-    const pub = (a.published_at ?? a.updated_at).toUTCString();
     return `
     <item>
       <title><![CDATA[${a.title}]]></title>
       <link>${url}</link>
       <guid isPermaLink="true">${url}</guid>
-      <description><![CDATA[${a.excerpt ?? a.title}]]></description>
-      <pubDate>${pub}</pubDate>
+      <description><![CDATA[${a.excerpt || a.title}]]></description>
+      <pubDate>${a.published.toUTCString()}</pubDate>
       ${a.primary_keyword ? `<category><![CDATA[${a.primary_keyword}]]></category>` : ''}
     </item>`.trim();
   }).join('\n    ');

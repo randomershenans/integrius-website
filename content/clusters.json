@@ -1,0 +1,10 @@
+[
+  { "name": "Data Integration Problems", "slug": "data-integration", "description": "Challenges, costs, failures, and architecture of enterprise data integration", "sort_order": 1 },
+  { "name": "Data Products & Data Mesh", "slug": "data-products", "description": "What data products are, how to build them, governance, composability", "sort_order": 2 },
+  { "name": "Enterprise Search", "slug": "enterprise-search", "description": "Why enterprise search fails, costs, comparison, the governed alternative", "sort_order": 3 },
+  { "name": "AI & Data Readiness", "slug": "ai-data", "description": "Why AI projects fail without good data, data pipelines, governance as AI prerequisite", "sort_order": 4 },
+  { "name": "Self-Hosted & Sovereignty", "slug": "self-hosted", "description": "On-premises, air-gapped, data sovereignty, EU Data Act, self-hosted vs SaaS", "sort_order": 5 },
+  { "name": "Industry Verticals", "slug": "verticals", "description": "Pharma, financial services, government, healthcare data integration", "sort_order": 6 },
+  { "name": "Vendor Comparisons", "slug": "vendor-comparisons", "description": "Integrius vs competitor pages and vendor shortlist guides", "sort_order": 7 },
+  { "name": "Use Cases & How-To", "slug": "use-cases", "description": "Job-to-be-done articles and practitioner-level how-to guides", "sort_order": 8 }
+]

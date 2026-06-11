@@ -3,37 +3,23 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import prisma from '@/lib/prisma';
+import { getAllArticles, getArticle, getRelatedArticles, type Article, type Cluster } from '@/lib/content';
 import TableOfContents from '@/components/TableOfContents';
 import { BlogHeader } from '@/components/blog/BlogHeader';
 import { BlogFooter } from '@/components/blog/BlogFooter';
 
-export const dynamic = 'force-dynamic';
-
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-async function getArticle(slug: string) {
-  return prisma.cms_articles.findFirst({
-    where: { slug, status: 'published' },
-    include: { cluster: { select: { name: true, slug: true } } },
-  });
+export function generateStaticParams() {
+  return getAllArticles().map((a) => ({ slug: a.slug }));
 }
 
-async function getRelated(clusterId: string | null | undefined, currentSlug: string) {
-  if (!clusterId) return [];
-  return prisma.cms_articles.findMany({
-    where: { status: 'published', cluster_id: clusterId, slug: { not: currentSlug } },
-    orderBy: { published_at: 'desc' },
-    take: 3,
-    select: { title: true, slug: true, excerpt: true, article_type: true },
-  });
-}
+export const dynamicParams = false;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticle(slug);
+export function generateMetadata({ params }: Props): Metadata {
+  const article = getArticle(params.slug);
   if (!article) return {};
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
@@ -41,13 +27,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: article.meta_title,
     description: article.meta_description,
-    alternates: { canonical: `/blog/${slug}` },
+    alternates: { canonical: `/blog/${article.slug}` },
     openGraph: {
       title: article.meta_title,
       description: article.meta_description,
       type: 'article',
-      publishedTime: article.published_at?.toISOString(),
-      url: `${siteUrl}/blog/${slug}`,
+      publishedTime: article.published.toISOString(),
+      modifiedTime: article.updated.toISOString(),
+      url: `${siteUrl}/blog/${article.slug}`,
       siteName: 'Integrius',
     },
     twitter: {
@@ -58,18 +45,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function formatDate(d: Date | null): string {
-  if (!d) return '';
+function formatDate(d: Date): string {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
 }
 
-function readingTime(wordCount: number | null): string {
+function readingTime(wordCount: number): string {
   if (!wordCount) return '';
   return `${Math.ceil(wordCount / 220)} min read`;
 }
 
 // BreadcrumbList schema
-function BreadcrumbSchema({ article, cluster }: { article: { title: string; slug: string }; cluster: { name: string; slug: string } | null }) {
+function BreadcrumbSchema({ article, cluster }: { article: Article; cluster: Cluster | null }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
   const items = [
     { '@type': 'ListItem', position: 1, name: 'Blog', item: `${siteUrl}/blog` },
@@ -81,15 +67,15 @@ function BreadcrumbSchema({ article, cluster }: { article: { title: string; slug
 }
 
 // Article schema markup (JSON-LD)
-function ArticleSchema({ article }: { article: { title: string; meta_description: string; published_at: Date | null; updated_at: Date; slug: string } }) {
+function ArticleSchema({ article }: { article: Article }) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
     description: article.meta_description,
-    datePublished: article.published_at?.toISOString(),
-    dateModified: article.updated_at.toISOString(),
+    datePublished: article.published.toISOString(),
+    dateModified: article.updated.toISOString(),
     url: `${siteUrl}/blog/${article.slug}`,
     author: {
       '@type': 'Organization',
@@ -120,12 +106,11 @@ function FaqSchema({ content }: { content: string }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 }
 
-export default async function ArticlePage({ params }: Props) {
-  const { slug } = await params;
-  const article  = await getArticle(slug);
+export default function ArticlePage({ params }: Props) {
+  const article = getArticle(params.slug);
   if (!article) notFound();
 
-  const related  = await getRelated(article.cluster_id, slug);
+  const related  = getRelatedArticles(article);
   const isPillar = article.article_type === 'pillar';
 
   return (
@@ -152,15 +137,15 @@ export default async function ArticlePage({ params }: Props) {
           </div>
           <h1 className="text-3xl font-bold text-white leading-tight mb-4">{article.title}</h1>
           <div className="flex items-center gap-3 text-sm text-white/50">
-            <span>{formatDate(article.published_at)}</span>
-            {article.word_count && <span>{readingTime(article.word_count)}</span>}
-            {article.ai_generated && (
+            <span>{formatDate(article.published)}</span>
+            <span>{readingTime(article.word_count)}</span>
+            {article.ai_assisted && (
               <span className="bg-white/10 text-white/50 px-2 py-0.5 rounded text-xs">AI-assisted</span>
             )}
           </div>
         </div>
 
-        {/* Table of contents — pillar articles only */}
+        {/* Table of contents: pillar articles only */}
         {isPillar && <TableOfContents content={article.content} />}
 
         {/* Article body */}
@@ -192,7 +177,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="mt-16 bg-gray-950 border border-white/10 rounded-xl p-8">
           <h3 className="text-lg font-bold text-white mb-2">See Integrius in action</h3>
           <p className="text-white/60 mb-4 text-sm">
-            Governed data products. Enterprise search as a byproduct. Self-hosted or cloud.
+            Governed data products. Enterprise search as a byproduct. Self-hosted on your infrastructure.
           </p>
           <a
             href="/contact"

@@ -1,43 +1,31 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
+import { clusters, getCluster, getArticlesByCluster } from '@/lib/content';
 import { BlogHeader } from '@/components/blog/BlogHeader';
 import { BlogFooter } from '@/components/blog/BlogFooter';
 
-export const dynamic = 'force-dynamic';
-
 interface Props {
-  params: Promise<{ cluster: string }>;
+  params: { cluster: string };
 }
 
-async function getCluster(slug: string) {
-  return prisma.cms_keyword_clusters.findUnique({
-    where: { slug },
-    include: {
-      articles: {
-        where: { status: 'published' },
-        orderBy: { published_at: 'desc' },
-        select: {
-          id: true, title: true, slug: true, excerpt: true,
-          article_type: true, word_count: true, published_at: true,
-        },
-      },
-    },
-  });
+export function generateStaticParams() {
+  return clusters.map((c) => ({ cluster: c.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { cluster } = await params;
-  const data = await getCluster(cluster);
+export const dynamicParams = false;
+
+export function generateMetadata({ params }: Props): Metadata {
+  const data = getCluster(params.cluster);
   if (!data) return {};
 
+  const articles    = getArticlesByCluster(data.slug);
   const siteUrl     = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
-  const pillarCount = data.articles.filter(a => a.article_type === 'pillar').length;
-  const faqCount    = data.articles.filter(a => a.article_type === 'faq').length;
+  const pillarCount = articles.filter(a => a.article_type === 'pillar').length;
+  const faqCount    = articles.filter(a => a.article_type === 'faq').length;
 
   return {
-    title: `${data.name} — Integrius Blog`,
+    title: `${data.name} | Integrius Blog`,
     description: data.description ?? `${pillarCount} in-depth guides and ${faqCount} explainers on ${data.name.toLowerCase()} from the Integrius research team.`,
     alternates: { canonical: `/blog/topic/${data.slug}` },
     openGraph: {
@@ -49,24 +37,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function formatDate(d: Date | null) {
-  if (!d) return '';
+function formatDate(d: Date) {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(d);
 }
 
-function readingTime(wc: number | null) {
+function readingTime(wc: number) {
   if (!wc) return '';
   return `${Math.ceil(wc / 220)} min read`;
 }
 
-export default async function ClusterPage({ params }: Props) {
-  const { cluster } = await params;
-  const data        = await getCluster(cluster);
+export default function ClusterPage({ params }: Props) {
+  const data = getCluster(params.cluster);
   if (!data) notFound();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
-  const pillars  = data.articles.filter(a => a.article_type === 'pillar');
-  const faqs     = data.articles.filter(a => a.article_type === 'faq');
+  const articles = getArticlesByCluster(data.slug);
+  const siteUrl  = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us';
+  const pillars  = articles.filter(a => a.article_type === 'pillar');
+  const faqs     = articles.filter(a => a.article_type === 'faq');
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -80,7 +67,7 @@ export default async function ClusterPage({ params }: Props) {
   const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${data.name} — Integrius`,
+    name: `${data.name} | Integrius`,
     description: data.description,
     url: `${siteUrl}/blog/topic/${data.slug}`,
     publisher: { '@type': 'Organization', name: 'Integrius', url: siteUrl },
@@ -124,8 +111,8 @@ export default async function ClusterPage({ params }: Props) {
                     <h3 className="font-semibold text-white text-base leading-snug group-hover:text-[#00B8D4] mb-3">{a.title}</h3>
                     {a.excerpt && <p className="text-sm text-white/60 leading-relaxed line-clamp-3 mb-4">{a.excerpt}</p>}
                     <div className="flex items-center gap-3 text-xs text-white/40">
-                      {a.published_at && <span>{formatDate(a.published_at)}</span>}
-                      {a.word_count && <span>{readingTime(a.word_count)}</span>}
+                      <span>{formatDate(a.published)}</span>
+                      <span>{readingTime(a.word_count)}</span>
                     </div>
                   </article>
                 </Link>
