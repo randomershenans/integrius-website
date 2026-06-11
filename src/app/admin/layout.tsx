@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, FileText, Zap, Building2, Key, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Zap, Building2, Key, LogOut, TrendingUp } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router   = useRouter();
@@ -39,6 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin',          label: 'Dashboard', icon: LayoutDashboard, exact: true },
     { href: '/admin/articles', label: 'Articles',  icon: FileText,        exact: false },
     { href: '/admin/generate', label: 'Generate',  icon: Zap,             exact: false },
+    { href: '/admin/seo',      label: 'SEO Brain', icon: TrendingUp,      exact: false },
   ];
 
   const clientNav = [
