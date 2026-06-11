@@ -1,34 +1,72 @@
 'use client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, LineChart, Database } from 'lucide-react';
+import { ArrowRight, Zap, LineChart, Database, Search } from 'lucide-react';
 import { SpaceBackground } from '@/components/landing/SpaceBackground';
-import { FlyingDataIcons } from '@/components/landing/FlyingDataIcons';
 import { FloatingElement } from '@/components/landing/FloatingElement';
 import PricingCalculator from '@/components/landing/PricingCalculator';
 import { Logo } from '@/components/landing/Logo';
 import { BurgerMenu } from '@/components/landing/BurgerMenu';
 import { ProductsDropdown } from '@/components/landing/ProductsDropdown';
 import { Hero } from '@/components/landing/Hero';
-import { ProblemSection } from '@/components/landing/ProblemSection';
+import { UnificationStory } from '@/components/landing/UnificationStory';
+import { OpticShowcase } from '@/components/landing/OpticShowcase';
 import { WhatWeReplace } from '@/components/landing/WhatWeReplace';
 import { TimeToValue } from '@/components/landing/TimeToValue';
 import { PerformanceNumbers } from '@/components/landing/PerformanceNumbers';
 import { ToughQuestions } from '@/components/landing/ToughQuestions';
 import { SecuritySection } from '@/components/landing/SecuritySection';
+import { SmoothScroll } from '@/components/SmoothScroll';
+
+const products = [
+  {
+    icon: Database,
+    title: 'Integrius Core',
+    subtitle: 'The unified data layer',
+    description:
+      'Sixteen connector types, governed data products with accountable owners, entity-keyed joins across sources, and one stable API per business concept.',
+    link: '/products/core',
+  },
+  {
+    icon: LineChart,
+    title: 'Integrius Optic',
+    subtitle: 'Ask anything. See everything.',
+    description:
+      'AI analytics on your governed data: questions in plain English, answers with charts, forecasts, and watchers. Local inference, so nothing leaves your network.',
+    link: '/products/optic',
+    badge: 'Available in Pilot',
+  },
+  {
+    icon: Search,
+    title: 'Integrius Search',
+    subtitle: 'Find anything, governed',
+    description:
+      'Real-time federated search across every data product. Fuzzy matching, facets, autocomplete. Derived from the data layer, no separate index to maintain.',
+    link: '/products/search',
+  },
+  {
+    icon: Zap,
+    title: 'Integrius SDK',
+    subtitle: 'Build on unified data',
+    description:
+      'Typed clients for developers. One endpoint per concept, stable versioned contracts, zero point-to-point glue code. Internal tools in days, not months.',
+    link: '/products/sdk',
+    badge: 'Live on npm',
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden text-white">
+    <div className="flex flex-col min-h-screen overflow-x-clip text-white">
+      <SmoothScroll />
       <SpaceBackground />
-      <FlyingDataIcons />
 
       {/* Header */}
       <header className="fixed top-0 w-full px-4 lg:px-6 h-16 flex items-center justify-between z-[60] bg-black/50 backdrop-blur-md">
         <Logo />
         <nav className="hidden md:flex gap-4 sm:gap-6 items-center">
           <ProductsDropdown />
-          <a className="text-sm font-medium text-white/80 hover:text-[#00B8D4] transition-colors" href="#how-it-works">
+          <a className="text-sm font-medium text-white/80 hover:text-[#00B8D4] transition-colors" href="#story">
             How It Works
           </a>
           <a className="text-sm font-medium text-white/80 hover:text-[#00B8D4] transition-colors" href="#pricing">
@@ -49,25 +87,22 @@ export default function Home() {
         {/* 1. Hero */}
         <Hero />
 
-        {/* 2. Problem Section */}
-        <ProblemSection />
+        {/* 2. The unification story (scroll act) */}
+        <UnificationStory />
 
         {/* 3. Products */}
         <section id="products" className="pt-12 pb-24 relative z-10">
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
               <h2 className="text-3xl font-bold tracking-tighter text-center mb-4 bg-gradient-to-r from-[#00B8D4] to-[#0091EA] text-transparent bg-clip-text">
-                One Unified Data Layer. Everything You Need.
+                One platform. Four ways in.
               </h2>
               <p className="text-lg text-center mb-12 max-w-3xl mx-auto text-white/80">
-                The foundation enterprises have needed for 20 years. Built for how companies actually work.
+                The scaffolding every enterprise has needed for twenty years: a governed
+                layer between your systems and everyone who depends on them.
               </p>
-              <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
-                {[
-                  { icon: Database, title: 'Integrius Core', subtitle: 'Unified Enterprise Data Layer', description: 'Connect all your legacy systems, databases, and SaaS tools into one unified real-time API without data lakes, rewrites, or migrations.', link: '/products/core' },
-                  { icon: Zap, title: 'Integrius SDK', subtitle: 'Build Faster With Unified Data', description: 'For developers and product teams. Pull from multiple systems, output one clean structure. Build internal tools in days instead of months.', link: '/products/sdk', badge: 'Live on npm' },
-                  { icon: LineChart, title: 'Integrius Optic', subtitle: 'See Everything. Ask Anything.', description: 'The conversational data interface for your enterprise. Ask questions, explore answers, generate reports, and monitor what matters. All from one interface.', link: '/products/optic', badge: 'Available in Pilot' },
-                ].map((product, index) => (
+              <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4 max-w-7xl mx-auto">
+                {products.map((product, index) => (
                   <motion.div
                     key={product.title}
                     initial={{ opacity: 0, y: 20 }}
@@ -75,10 +110,10 @@ export default function Home() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.02 }}
-                    className="relative p-8 rounded-xl overflow-hidden bg-black/30 transition-all duration-300 flex flex-col"
+                    className="relative p-8 rounded-xl overflow-hidden bg-black/30 border border-white/5 hover:border-cyan-500/20 transition-all duration-300 flex flex-col"
                   >
                     <product.icon className="w-12 h-12 mb-4 text-[#00B8D4]" />
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-3 mb-2 flex-wrap">
                       <h3 className="text-2xl font-bold text-white">{product.title}</h3>
                       {'badge' in product && product.badge && (
                         <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 whitespace-nowrap">{product.badge}</span>
@@ -100,22 +135,25 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. What We Replace */}
+        {/* 4. Optic showcase */}
+        <OpticShowcase />
+
+        {/* 5. What We Replace */}
         <WhatWeReplace />
 
-        {/* 5. Time to Value */}
+        {/* 6. Time to Value */}
         <TimeToValue />
 
-        {/* 6. Performance Numbers */}
+        {/* 7. Performance Numbers */}
         <PerformanceNumbers />
 
-        {/* 7. Tough Questions */}
+        {/* 8. Tough Questions */}
         <ToughQuestions />
 
-        {/* 8. Security Section */}
+        {/* 9. Security Section */}
         <SecuritySection />
 
-        {/* 9. Pricing */}
+        {/* 10. Pricing */}
         <section id="pricing" className="py-24 relative z-20">
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="p-8 bg-black/50 backdrop-blur-lg rounded-xl" delay={0.2}>
@@ -123,14 +161,14 @@ export default function Home() {
                 Transparent Pricing
               </h2>
               <p className="text-center mb-8 max-w-3xl mx-auto text-white/70">
-                Priced by data products. Data sources and complexity are unlimited.
+                Priced by governed data products in production. Not seats, not connectors, not API calls.
               </p>
               <PricingCalculator />
             </FloatingElement>
           </div>
         </section>
 
-        {/* 10. Final CTA */}
+        {/* 11. Final CTA */}
         <section className="py-24 relative">
           <div className="container px-4 md:px-6 mx-auto">
             <FloatingElement className="flex flex-col items-center justify-center space-y-4 bg-black/50 backdrop-blur-lg p-8 rounded-xl" delay={0.5}>

@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import { PostHogProvider } from '@/components/PostHogProvider';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: { default: 'Integrius — Change Anything. Break Nothing.', template: '%s | Integrius' },
-  description: 'Integrius unifies your data into governed data products and shows you exactly what will break, before you break it.',
+  title: { default: 'Integrius: Connect once. Use everywhere. Know everything.', template: '%s | Integrius' },
+  description: 'The self-hosted data product platform. Integrius turns fragmented enterprise data into governed data products: one API per business concept, a tamper-evident audit trail, and AI answers that never leave your network.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us'),
   openGraph: {
     siteName: 'Integrius',
@@ -48,7 +49,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-black min-h-screen font-sans">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
-        <main>{children}</main>
+        <PostHogProvider>
+          <main>{children}</main>
+        </PostHogProvider>
       </body>
     </html>
   );
