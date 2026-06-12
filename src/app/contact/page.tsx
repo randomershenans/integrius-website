@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Building, User, MessageSquare, ArrowRight } from 'lucide-react';
 import { SpaceBackground } from '@/components/landing/SpaceBackground';
@@ -12,6 +12,9 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  // Anti-spam: honeypot value (humans never see the field) and mount time
+  const [honeypot, setHoneypot] = useState('');
+  const mountedAt = useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +25,7 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, website: honeypot, t: Date.now() - mountedAt.current }),
       });
       if (!res.ok) throw new Error('Failed to send');
       setSubmitted(true);
@@ -61,6 +64,14 @@ export default function ContactPage() {
 
               {!submitted ? (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot: hidden from humans, form bots fill it */}
+                  <div className="absolute -left-[9999px] top-0 h-0 overflow-hidden" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      type="text" id="website" name="website" tabIndex={-1} autoComplete="off"
+                      value={honeypot} onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
                   <div>
                     <label htmlFor="name" className="flex items-center gap-2 mb-2 text-sm font-medium text-white">
                       <User className="w-4 h-4" /> Name

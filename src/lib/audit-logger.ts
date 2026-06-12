@@ -13,6 +13,7 @@ type AuditAction =
   | 'team.invite'
   | 'team.remove'
   | 'contact.submit'
+  | 'contact.spam_blocked'
 
 interface AuditEntry {
   action: AuditAction
