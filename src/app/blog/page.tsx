@@ -6,7 +6,7 @@ import { BlogFooter } from '@/components/blog/BlogFooter';
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Problem-first thinking on data integration, data products, enterprise search, and AI readiness. No marketing fluff.',
+  description: 'Problem-first writing on data integration, data products, enterprise data governance, and self-hosted AI.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Integrius Blog',
@@ -39,10 +39,10 @@ export default function BlogPage() {
         {/* Hero */}
         <div className="mb-14">
           <h1 className="text-4xl font-bold text-white mb-4">
-            The data problems your buyers are already Googling.
+            The data problems worth getting right.
           </h1>
           <p className="text-xl text-white/60 max-w-2xl">
-            Problem-first content on data integration, data products, and enterprise data governance. No marketing fluff.
+            Problem-first writing on data integration, data products, enterprise data governance, and self-hosted AI.
           </p>
         </div>
 
