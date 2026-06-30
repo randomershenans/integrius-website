@@ -68,34 +68,18 @@ export default function AboutPage() {
 
         <div className="prose max-w-none leading-relaxed space-y-5">
           <p>
-            This blog is written by the team at <a href={siteUrl} className="text-[#00B8D4] font-medium underline decoration-[#00B8D4]/40 hover:decoration-[#00B8D4]">Integrius</a> — the company building the governed data layer for enterprise data integration.
+            This blog is written by the team at <a href={siteUrl} className="text-[#00B8D4] font-medium underline decoration-[#00B8D4]/40 hover:decoration-[#00B8D4]">Integrius</a>, the company building the governed data layer for enterprise data integration.
           </p>
           <p>
             We write about the problems we see every day: data integration that does not scale, governance that exists only on paper, enterprise search built on stale indexes, and AI projects that fail because the data underneath them is ungoverned and untrustworthy.
           </p>
           <p>
-            Everything here is problem-first. We start with what breaks and why — not with what we sell.
+            Everything here is problem-first. We start with what breaks and why, not with what we sell.
           </p>
-
-          <h2 className="text-xl font-bold text-white mt-10 mb-3">Writing standards</h2>
-          <ul className="space-y-2 text-sm list-none pl-0">
-            {[
-              'Claims are sourced or acknowledged as estimates.',
-              'We do not use vendor marketing language or phrase solutions as features.',
-              'We name competitors honestly. If something does a job better than us, we say so.',
-              'Numbers come from public research, analyst reports, or our own customer data.',
-              'UK English throughout.',
-            ].map(s => (
-              <li key={s} className="flex items-start gap-2">
-                <span className="text-[#00B8D4] mt-1">—</span>
-                <span className="text-white/80">{s}</span>
-              </li>
-            ))}
-          </ul>
 
           <h2 className="text-xl font-bold text-white mt-10 mb-3">What Integrius builds</h2>
           <p>
-            Integrius is a governed data layer — infrastructure that sits between your raw data sources and every downstream consumer (dashboards, APIs, AI models, data products). Every field mapping is approved. Every access decision is logged. Every consumer subscribes to an explicit schema with a change notification contract.
+            Integrius is a governed data layer: infrastructure that sits between your raw data sources and every downstream consumer (dashboards, APIs, AI models, data products). Every field mapping is approved. Every access decision is logged. Every consumer subscribes to an explicit schema with a change notification contract.
           </p>
           <p>
             The platform is self-hosted, API-first, and enterprise-ready. It ships enterprise search as a byproduct of governance, not as an additional product to buy and maintain.
