@@ -28,7 +28,7 @@ const orgSchema = {
   '@type': 'Organization',
   name: 'Integrius',
   url: siteUrl,
-  logo: `${siteUrl}/logo-dark.png`,
+  logo: `${siteUrl}/logo.png`,
   sameAs: [
     'https://www.linkedin.com/company/integrius',
   ],
