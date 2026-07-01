@@ -72,7 +72,7 @@ AI-ready data has four properties. Strip away the jargon and they are straightfo
 
 **Carrying lineage.** Every value can be traced back to its source through each transformation it passed through. You can answer "why did the model say that" because you can see exactly what fed it.
 
-Notice what this list is not. It is not "more data". It is not "a bigger model". It is structure, ownership, and traceability applied to the data you already have. Most enterprises do not have a data volume problem. They have a data readiness problem.
+Notice what this list is not. It is not "more data". It is not "a bigger model". It is [structure, ownership, and traceability applied to the data](/blog/stop-throwing-data-at-ai) you already have. Most enterprises do not have a data volume problem. They have a data readiness problem.
 
 To go deeper on lineage and traceability, see [What Is a Data Product?](/blog/what-is-a-data-product), which unpacks how a well-defined product carries this metadata by design.
 
@@ -82,7 +82,7 @@ The practical unit for delivering AI-ready data is the data product.
 
 A data product treats a dataset the way a software team treats a service. It has a clear owner. A normalised, documented schema. A stable API. Defined quality expectations. And it is built to be consumed by others, repeatedly, without hand-holding.
 
-This is exactly what an AI initiative needs. A model in training wants clean, consistent examples. A retrieval-augmented system in production wants reliable, current, queryable data behind a stable endpoint. Data products serve both. They turn scattered sources into governed, addressable assets that an AI system can depend on, rather than one-off extracts that rot the moment they are created.
+This is exactly what an AI initiative needs. A model in training wants clean, consistent examples. A [retrieval-augmented system](/blog/rag-cant-count) in production wants reliable, current, queryable data behind a stable endpoint. Data products serve both. They turn scattered sources into governed, addressable assets that an AI system can depend on, rather than one-off extracts that rot the moment they are created.
 
 The contrast with the old approach is stark. Without data products, every AI use case starts from scratch. The team hunts for sources, writes bespoke cleaning scripts, guesses at definitions, and ships something brittle. With data products, that work is done once, owned, and reused. The same governed customer product feeds the churn model, the support assistant, and the analytics dashboard.
 

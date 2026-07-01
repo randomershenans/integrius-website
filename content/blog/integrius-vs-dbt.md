@@ -80,7 +80,7 @@ On pricing, briefly. dbt Core is open source and free; dbt Cloud is a commercial
 
 The combined pattern is clean, and it is the one we recommend to teams that already run dbt well.
 
-Ingestion lands raw data in the warehouse, with whatever ELT tooling you prefer; we have written about that layer in [Integrius vs Fivetran](/blog/integrius-vs-fivetran). dbt transforms it: tested, version-controlled models produce curated, analytics-ready tables. Analysts and BI keep reading those tables directly, exactly as they do today. Nothing about your dbt workflow changes.
+Ingestion lands raw data in the warehouse, with whatever ELT tooling you prefer, whether Fivetran, Airbyte, or a [self-hosted alternative to Rivery](/blog/rivery-alternatives); we have written about that layer in [Integrius vs Fivetran](/blog/integrius-vs-fivetran). dbt transforms it: tested, version-controlled models produce curated, analytics-ready tables. Analysts and BI keep reading those tables directly, exactly as they do today. Nothing about your dbt workflow changes.
 
 Integrius then sits on top and to the side. On top: it connects to the warehouse and turns dbt's curated outputs into governed data products, each with an owner, field-level access control, an audit chain, and a stable API that applications and other teams consume. To the side: it joins those warehouse-derived products with sources dbt cannot reach, the operational PostgreSQL database, the Salesforce instance, the Kafka stream, using entity-keyed joins in real time.
 

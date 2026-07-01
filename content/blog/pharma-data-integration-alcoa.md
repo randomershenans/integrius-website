@@ -95,7 +95,7 @@ The conventional path is a formal integration project. Scope it, fund it, queue 
 
 With a governed platform, the shape of the work changes. Integrius ships with sixteen connectors covering REST, GraphQL, PostgreSQL, MySQL, SQL Server, MongoDB, Snowflake, BigQuery, Redshift, S3, Salesforce, Kafka, CSV, Excel, JSON, and event-log sources. Each source becomes a governed data product in minutes rather than weeks. The team queries a unified, governed view instead of stitching exports together by hand.
 
-Crucially, the integrity attributes come along for free. Because every source is read through a governed API with its own audit trail, the lineage of every figure in that milestone review is recorded automatically. When someone asks where a stability number came from, the answer is one query, not an archaeology project across a shared drive. This is the same data foundation that determines whether [an AI initiative succeeds or fails](/blog/data-integration-for-ai): governed inputs in, trustworthy outputs out.
+Crucially, the integrity attributes come along for free. Because every source is read through a governed API with its own audit trail, the lineage of every figure in that milestone review is recorded automatically. When someone asks where a stability number came from, the answer is one query, not an archaeology project across a shared drive. This is the same data foundation that determines whether [an AI initiative succeeds or fails](/blog/data-integration-for-ai): governed inputs in, [trustworthy outputs out](/blog/stop-throwing-data-at-ai).
 
 ## Healthcare and Life Sciences: Fastest Growing Data Vertical
 

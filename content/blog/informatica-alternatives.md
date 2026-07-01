@@ -39,7 +39,7 @@ The practical complication is that "replacing Informatica" rarely means one tool
 
 ## Fivetran and Airbyte: the ELT slice
 
-**What they are.** Fivetran is the leading managed ELT service: pre-built connectors that replicate data from sources into your warehouse with automated schema handling. Airbyte is its open source counterpart, with hundreds of connectors and the option to self-host.
+**What they are.** Fivetran is the leading managed [cloud ELT service](/blog/rivery-alternatives): pre-built connectors that replicate data from sources into your warehouse with automated schema handling. Airbyte is its open source counterpart, with hundreds of connectors and the [option to self-host open-source connectors](/blog/singer-alternatives).
 
 **Strengths.** If a chunk of your Informatica estate is really just "move data from sources into the warehouse," modern ELT does that job with dramatically less ceremony. Fivetran is near zero-maintenance: point it at a source and rows arrive, schemas adapt, and nobody babysits pipelines. Airbyte trades some of that polish for openness: no licence cost on the self-hosted core, connectors you can extend, and deployment inside your own infrastructure. Together they cover both the managed and the sovereign end of the ELT spectrum.
 

@@ -103,7 +103,7 @@ None of this means the cloud is wrong. For plenty of workloads it is exactly rig
 
 But when the data is regulated, the calculus changes. The subscription line item is the small number. The audit time, the legal review, the sovereignty risk, and the cost of unwinding a dependency later are the large ones.
 
-A self-hosted data platform turns that around. Infrastructure cost is yours, but so is control. There is no outbound dependency to defend in an audit, and no sub-processor chain to renegotiate. For organisations that govern data products at scale, predictability is worth more than a low monthly fee. That principle sits at the centre of [What Is Data Product Governance?](/blog/data-product-governance).
+A [self-hosted governed alternative to cloud ELT](/blog/rivery-alternatives) turns that around. Infrastructure cost is yours, but so is control. There is no outbound dependency to defend in an audit, and no sub-processor chain to renegotiate. For organisations that govern data products at scale, predictability is worth more than a low monthly fee. That principle sits at the centre of [What Is Data Product Governance?](/blog/data-product-governance).
 
 ## Self-Hosted Does Not Mean Backwards
 
