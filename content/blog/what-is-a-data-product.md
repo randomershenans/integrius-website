@@ -73,11 +73,11 @@ Access is controlled at the field level. Sensitive fields are protected. Changes
 
 ## Why Data Products Matter for AI Readiness
 
-Every organisation now wants to put AI to work on its data. Most discover the same hard truth: the model is rarely the problem. The data is. An AI system trained or grounded on ungoverned, undocumented, inconsistent data produces confident nonsense, and you cannot tell why.
+Every organisation now wants to put AI to work on its data. Most discover the same hard truth: the model is rarely the problem. The data is. An AI system trained or grounded on ungoverned, undocumented, inconsistent data [produces confident nonsense](/blog/rag-cant-count), and you cannot tell why.
 
 Data products fix this at the root. Because a data product is normalised, an AI system gets consistent inputs. Because it is documented, the system and its builders know what each field means. Because it is governed, sensitive data is not silently fed into a model that should never have seen it. Because it is owned, when a model misbehaves, there is a clear data lineage to investigate.
 
-In other words, data products are the substrate that makes AI initiatives trustworthy rather than experimental. The teams that struggle with AI are usually the teams that skipped the data product step and pointed a model at a swamp. We cover this failure pattern in detail in [why your AI initiative is failing](/blog/data-integration-for-ai). The short version: AI readiness is data product readiness.
+In other words, data products are the substrate that makes AI initiatives trustworthy rather than experimental. The teams that struggle with AI are usually the teams that skipped the data product step and [pointed a model at a swamp](/blog/stop-throwing-data-at-ai). We cover this failure pattern in detail in [why your AI initiative is failing](/blog/data-integration-for-ai). The short version: AI readiness is data product readiness.
 
 ## How Data Products Solve the N x M Integration Problem
 

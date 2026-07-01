@@ -88,7 +88,7 @@ If your scoreboard is "number of sources connected," Airbyte wins, comfortably. 
 
 Yes, and for some architectures it is the right call.
 
-The pattern: Airbyte handles wide ingestion. It pulls from the long tail of SaaS tools and niche sources that no curated connector set will ever cover, and lands them in your warehouse. Integrius then connects to that warehouse, through its Snowflake, BigQuery, Redshift, or PostgreSQL connectors, and turns the curated datasets into governed data products: owned, access-controlled, audited, and served through stable APIs.
+The pattern: Airbyte handles wide ingestion. It pulls from the long tail of SaaS tools and niche sources that no curated connector set will ever cover, the same territory covered by [open-source taps and targets](/blog/singer-alternatives), and lands them in your warehouse. Integrius then connects to that warehouse, through its Snowflake, BigQuery, Redshift, or PostgreSQL connectors, and turns the curated datasets into governed data products: owned, access-controlled, audited, and served through stable APIs.
 
 In this topology Airbyte is the pipe and Integrius is the policy and the tap. Neither does the other's job. Airbyte never has to pretend it governs anything, and Integrius never has to chase a four-hundred-connector catalogue.
 

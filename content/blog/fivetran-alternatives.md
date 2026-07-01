@@ -57,7 +57,7 @@ Best for: lean data teams that want managed pipelines with minimal setup and a g
 
 ## Meltano
 
-What it is: an open-source, CLI-first data integration platform, originally incubated at GitLab, built around the Singer ecosystem of taps and targets and designed for "pipelines as code."
+What it is: an open-source, CLI-first data integration platform, originally incubated at GitLab, built around the [Singer ecosystem of taps and targets](/blog/singer-alternatives) and designed for "pipelines as code."
 
 Strengths: everything lives in version control: pipeline definitions, configuration, environments. That makes Meltano a natural fit for engineering teams that want their data integration reviewed, tested, and deployed like software. It is free, self-hostable, extensible, and plays well with dbt and orchestrators like Airflow or Dagster.
 

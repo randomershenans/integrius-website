@@ -85,7 +85,7 @@ Look at how the common models bill:
 
 Notice the pattern. Per-connector pricing charges you for breadth. Per-call pricing charges you for activity. Per-compute pricing charges you for analysis. In every case, success raises the meter.
 
-Growth is supposed to be the goal. Under these models, growth is the thing that gets taxed. Every new source, every extra query, every fresh use case nudges the bill upward, often unpredictably. Budgeting becomes a guessing game, and teams start rationing the very behaviour you wanted to encourage.
+Growth is supposed to be the goal. Under these models, growth is the thing that gets taxed. Every new source, every extra query, every fresh use case nudges the bill upward, often unpredictably, which is what drives many teams to look for [self-hosted alternatives to cloud ELT](/blog/rivery-alternatives). Budgeting becomes a guessing game, and teams start rationing the very behaviour you wanted to encourage.
 
 The incentive is backwards. You want people consuming and combining data freely. The pricing tells them to hold back. For a closer comparison of one of these models against a product-based approach, see [Integrius versus Fivetran](/blog/integrius-vs-fivetran).
 
