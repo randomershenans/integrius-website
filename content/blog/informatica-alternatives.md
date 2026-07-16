@@ -101,6 +101,28 @@ In Informatica terms, that slice usually looks like integration mappings plus go
 | Ataccama | Data quality and MDM | Cloud or customer-managed | Not public, enterprise negotiated |
 | Integrius | Governance plus delivery, served as APIs | Self-hosted, air-gap capable | Public, per governed data product |
 
+## Common questions about Informatica alternatives
+
+**What is the best open-source Informatica alternative?**
+
+There is no single open-source tool that replaces Informatica, because Informatica is a suite and open source is a set of specialists. In practice the open-source stack is Airbyte for replication, dbt for warehouse transformation, and one of the open catalogues for metadata. That combination covers the pipeline slices well. The slice it does not cover is governed delivery: field-level access control and an audit trail enforced when data is served. If that gap matters to you, read [data as a product](/blog/data-as-a-product) for why it is the part open source usually leaves open.
+
+**What can replace Informatica PowerCenter specifically?**
+
+PowerCenter is on-premises batch ETL, and a forced migration off it is the moment to decide whether you want a like-for-like replacement or a re-platform. Like-for-like, Talend keeps the closest ETL semantics. Re-platforming, most teams move to ELT: land raw data with Airbyte or Fivetran, then transform in the warehouse with dbt. Either way, treat the delivery and governance slice as a separate decision rather than assuming the new pipe carries it.
+
+**Is there a European alternative to Informatica?**
+
+The question behind this is usually data residency, not vendor nationality. Where a vendor is headquartered matters far less than where your data physically runs and who can reach it. For sovereignty requirements, the deciding factor is deployment: a self-hosted or air-gapped platform keeps data on infrastructure you control, inside your own jurisdiction, with no third-party processor in the path. [Self-hosted data governance](/blog/self-hosted-data-governance) explains why deployment, not vendor origin, is the real sovereignty lever.
+
+**What are the alternatives to Informatica Cloud (IDMC)?**
+
+IDMC bundles ingestion, quality, catalogue, and governance into one cloud service. The unbundled route is an ELT tool plus dbt plus a catalogue such as Collibra or Purview. The trade-off is the same one this whole page circles: several specialists give you control and clearer pricing, but you own the integration between them. Where that integration should not be left to documentation is the governed serving layer, which is the difference between a [connector marketplace and a governed data product](/blog/connector-marketplace-vs-unified-api-vs-data-product).
+
+**Is there an Informatica MDM or PIM alternative?**
+
+Master data management and product information management are distinct disciplines, not features you get for free by swapping ETL tools. Ataccama, covered above, is the closest specialist for genuine MDM. Integrius is not an MDM tool and will not pretend to be one; it governs and serves data products across systems, which is a different job from mastering golden records.
+
 ## How to choose: a decision framework
 
 The mistake to avoid is treating "leave Informatica" as one decision. It is several, and a forced PowerCenter migration is the moment to make them deliberately.

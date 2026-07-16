@@ -6,7 +6,7 @@ import { PostHogProvider } from '@/components/PostHogProvider';
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: { default: 'Integrius: Connect once. Use everywhere. Know everything.', template: '%s | Integrius' },
+  title: { default: 'Integrius: Self-Hosted Data Product & Governance Platform', template: '%s | Integrius' },
   description: 'The self-hosted data product platform. Integrius turns fragmented enterprise data into governed data products: one API per business concept, a tamper-evident audit trail, and AI answers that never leave your network.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://integri.us'),
   openGraph: {
