@@ -108,6 +108,24 @@ Best for: regulated or sovereignty-conscious organisations whose actual requirem
 | Estuary Flow / streaming | Real-time CDC | SaaS or self-managed stack | Usage-based or DIY | Freshness, event-driven syncs | Operational complexity |
 | Integrius | Governed data products | Self-hosted, air-gap capable | Per data product, published | Governed, audited access across systems | Not a bulk-replication tool |
 
+## Common questions about Fivetran alternatives
+
+**What is the best open-source Fivetran alternative?**
+
+Airbyte is the usual answer. It is open source, self-hostable, and has the broadest open connector catalogue, which makes it the closest open replacement for managed ELT. Meltano is the other option if your team would rather define pipelines as code and maintain them yourselves. Both trade Fivetran's zero-ops convenience for control and a lower licence cost, and both leave you owning the operational load. Neither answers governance; that sits above the pipe, not inside it.
+
+**Meltano vs Fivetran: which should I use?**
+
+They are different shapes for different teams. Fivetran is managed SaaS: you pay for someone else to run and maintain the pipelines, on consumption-based pricing. Meltano is an open-source framework: you pay in engineering time and run it yourself, with full control and no per-row bill. Choose Fivetran if you want to outsource operations and can forecast the cost; choose Meltano if you want to own the stack and prefer everything as code.
+
+**Why does Fivetran get expensive, and how do I control the cost?**
+
+Fivetran prices on data volume, so the bill scales with how much your sources change, not with the value you get from the data. That is fine at low volume and can surprise you at high volume. The way to control it is to model your row volumes against the pricing before committing, and to consider self-hosted or flat-fee alternatives if predictability matters more than convenience. This is the pattern we cover in [the hidden cost of data integration](/blog/data-integration-cost-hidden-tax): the sticker price is rarely the real one.
+
+**Is an ELT tool the same as a governed data layer?**
+
+No, and conflating them is the most expensive mistake on this page. An ELT tool moves data from sources into a destination. A governed data layer controls who can see which fields, tracks lineage, and logs every read, at the point the data is served. One is plumbing, the other is governance. The distinction, and when each is the right tool, is laid out in [connector marketplace vs unified API vs data product](/blog/connector-marketplace-vs-unified-api-vs-data-product).
+
 ## How to choose: a decision framework
 
 Forget feature checklists; pick by the job to be done.
